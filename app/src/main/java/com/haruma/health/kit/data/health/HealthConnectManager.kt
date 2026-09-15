@@ -1,6 +1,10 @@
 package com.haruma.health.kit.data.health
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.PermissionController
@@ -164,4 +168,48 @@ class HealthConnectManager @Inject constructor(
             false
         }
     }
+
+    fun openHealthConnectSettings(context: Context) {
+        val settingsIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            Intent("android.health.connect.action.MANAGE_HEALTH_PERMISSIONS").apply {
+                putExtra(Intent.EXTRA_PACKAGE_NAME, context.packageName)
+            }
+        } else {
+            Intent(HealthConnectClient.ACTION_HEALTH_CONNECT_SETTINGS)
+        }
+
+        try {
+            settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(settingsIntent)
+        } catch (_: Exception) {
+            val fallbackIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.fromParts("package", context.packageName, null)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            try {
+                context.startActivity(fallbackIntent)
+            } catch (_: Exception) {
+            }
+        }
+    }
+
+    fun openInstallHealthConnect(context: Context) {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse("market://details?id=com.google.android.apps.healthdata")
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        try {
+            context.startActivity(intent)
+        } catch (_: Exception) {
+            val webIntent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            try {
+                context.startActivity(webIntent)
+            } catch (_: Exception) {
+            }
+        }
+    }
 }
+

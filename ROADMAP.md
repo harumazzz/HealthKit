@@ -76,13 +76,13 @@ app/src/main/java/com/haruma/health/kit/
 
 ---
 
-### Giai đoạn 2: Dashboard Screen & Date Selector
-- [ ] Xây dựng `DateSelectorBar`: Nút chọn "Today", "Yesterday", nút lùi/tiến ngày và picker chọn ngày bất kỳ.
-- [ ] Xây dựng `ActivityRings`: Vòng tròn 3 màu (Move/Calories, Steps, Active Time) vẽ bằng Canvas Compose có animation.
-- [ ] Xây dựng `MetricCard`: Các card chỉ số bước chân, calo, nhịp tim gần nhất, thời lượng ngủ, lượng nước.
-- [ ] Xây dựng `QuickLogSheet`: ModalBottomSheet ghi nhanh nước uống (250ml, 500ml) hoặc cân nặng vào Health Connect.
-- [ ] Xây dựng `DashboardViewModel` & `DashboardUiState`: Xử lý tự động nạp dữ liệu của ngày được chọn và refresh khi có cập nhật.
-- [ ] Xử lý Banner/Dialog nhắc cấp quyền Health Connect mượt mà nếu chưa cấp đủ quyền.
+### Giai đoạn 2: Dashboard Screen & Date Selector (ĐÃ HOÀN THÀNH)
+- [x] Xây dựng `DateSelectorBar`: Nút chọn "Today", "Yesterday", nút lùi/tiến ngày và picker chọn ngày bất kỳ.
+- [x] Xây dựng `ActivityRings`: Vòng tròn 3 màu (Move/Calories, Steps, Active Time/Water) vẽ bằng Canvas Compose có animation.
+- [x] Xây dựng `MetricCard`: Các card chỉ số bước chân, calo, nhịp tim gần nhất, thời lượng ngủ, lượng nước, quãng đường, cân nặng.
+- [x] Xây dựng `QuickLogSheet`: ModalBottomSheet ghi nhanh nước uống (250ml, 500ml) hoặc cân nặng vào Health Connect.
+- [x] Xây dựng `DashboardViewModel` & `DashboardUiState`: Xử lý tự động nạp dữ liệu của ngày được chọn và refresh khi có cập nhật.
+- [x] Xử lý Banner/Card nhắc cấp quyền Health Connect mượt mà nếu chưa cấp đủ quyền kèm điều hướng người dùng vào Settings của hệ thống để cấp quyền.
 
 ---
 

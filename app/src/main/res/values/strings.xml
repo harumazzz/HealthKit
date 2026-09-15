@@ -7,4 +7,47 @@
     <string name="ready_for_phase_2">Ready for Phase 2</string>
     <string name="ready_for_phase_3">Ready for Phase 3</string>
     <string name="ready_for_phase_4">Ready for Phase 4</string>
+
+    <string name="permission_required_title">Health Connect Access Required</string>
+    <string name="permission_required_desc">Health Kit requires permissions to read and sync your daily steps, active calories, sleep duration, and activity metrics.</string>
+    <string name="grant_permissions">Grant Permissions</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="permission_not_available">Health Connect is not available or needs to be installed on this device.</string>
+    <string name="install_health_connect">Install Health Connect</string>
+
+    <string name="date_today">Today</string>
+    <string name="date_yesterday">Yesterday</string>
+    <string name="date_select">Select Date</string>
+    <string name="previous_day">Previous day</string>
+    <string name="next_day">Next day</string>
+
+    <string name="activity_summary">Daily Activity</string>
+    <string name="calories_burned">Calories</string>
+    <string name="steps">Steps</string>
+    <string name="water">Water</string>
+    <string name="sleep">Sleep</string>
+    <string name="heart_rate">Heart Rate</string>
+    <string name="distance">Distance</string>
+    <string name="weight">Weight</string>
+
+    <string name="unit_kcal">kcal</string>
+    <string name="unit_steps">steps</string>
+    <string name="unit_ml">ml</string>
+    <string name="unit_hours">hrs</string>
+    <string name="unit_bpm">bpm</string>
+    <string name="unit_km">km</string>
+    <string name="unit_kg">kg</string>
+
+    <string name="quick_log">Quick Log</string>
+    <string name="log_type">Log Type</string>
+    <string name="select_type">Select Type</string>
+    <string name="log_water">Log Water</string>
+    <string name="log_weight">Log Weight</string>
+    <string name="amount_ml">Amount (ml)</string>
+    <string name="weight_kg">Weight (kg)</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="quick_add_water">+%1$d ml</string>
+    <string name="logged_successfully">Saved successfully</string>
+    <string name="no_data">No data</string>
 </resources>
