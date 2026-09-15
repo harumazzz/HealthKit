@@ -1,6 +1,7 @@
 package com.haruma.health.kit.ui.settings.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Info
@@ -33,7 +34,7 @@ fun AboutSectionCard(
             icon = Icons.Default.PrivacyTip,
             iconTint = MaterialTheme.colorScheme.primary,
             title = stringResource(R.string.privacy_policy),
-            trailingIcon = Icons.Default.OpenInNew,
+            trailingIcon = Icons.AutoMirrored.Filled.OpenInNew,
             onClick = onOpenPrivacyPolicy
         )
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
@@ -41,7 +42,7 @@ fun AboutSectionCard(
             icon = Icons.Default.Description,
             iconTint = MaterialTheme.colorScheme.secondary,
             title = stringResource(R.string.settings_terms_of_use),
-            trailingIcon = Icons.Default.OpenInNew,
+            trailingIcon = Icons.AutoMirrored.Filled.OpenInNew,
             onClick = onOpenTermsOfUse
         )
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))

@@ -12,6 +12,7 @@ import com.haruma.health.kit.ui.navigation.HealthNavHost
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
+    initialRoute: String? = null,
     navController: NavHostController = rememberNavController()
 ) {
     Surface(
@@ -20,7 +21,8 @@ fun MainScreen(
     ) {
         HealthNavHost(
             navController = navController,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            initialRoute = initialRoute
         )
     }
 }

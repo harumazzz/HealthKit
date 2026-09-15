@@ -119,13 +119,13 @@ class HourlyMetricAggregator @Inject constructor() {
                         metricType = metricType,
                         hourlyValues = stepData.hourlySteps.map { it.toDouble() },
                         mainValue = stepData.totalSteps.toDouble(),
-                        formattedMainValue = String.format(Locale.US, "%,d", stepData.totalSteps),
+                        formattedMainValue = String.format(Locale.getDefault(), "%,d", stepData.totalSteps),
                         unit = "steps",
                         goalValue = goals.stepsGoal.toDouble(),
-                        formattedGoal = String.format(Locale.US, "%,d steps", goals.stepsGoal),
+                        formattedGoal = String.format(Locale.getDefault(), "%,d steps", goals.stepsGoal),
                         subMetrics = listOf(
                             SubMetricItem("Duration", "${mins}m ${secs}s", "", SubMetricIconType.TIME),
-                            SubMetricItem("Distance", String.format(Locale.US, "%.1f", stepData.distanceKm), "KM", SubMetricIconType.DISTANCE),
+                            SubMetricItem("Distance", String.format(Locale.getDefault(), "%.1f", stepData.distanceKm), "KM", SubMetricIconType.DISTANCE),
                             SubMetricItem("Calories", "${stepData.caloriesKcal.toInt()}", "KCAL", SubMetricIconType.CALORIES)
                         )
                     )
@@ -153,13 +153,13 @@ class HourlyMetricAggregator @Inject constructor() {
                         metricType = metricType,
                         hourlyValues = hourlyArray.toList(),
                         mainValue = calVal,
-                        formattedMainValue = String.format(Locale.US, "%,d", calVal.toInt()),
+                        formattedMainValue = String.format(Locale.getDefault(), "%,d", calVal.toInt()),
                         unit = "kcal",
                         goalValue = goals.caloriesGoal,
-                        formattedGoal = String.format(Locale.US, "%.0f kcal", goals.caloriesGoal),
+                        formattedGoal = String.format(Locale.getDefault(), "%.0f kcal", goals.caloriesGoal),
                         subMetrics = listOf(
-                            SubMetricItem("Steps", String.format(Locale.US, "%,d", stepsVal), "", SubMetricIconType.STEPS),
-                            SubMetricItem("Distance", String.format(Locale.US, "%.1f", distKm), "KM", SubMetricIconType.DISTANCE),
+                            SubMetricItem("Steps", String.format(Locale.getDefault(), "%,d", stepsVal), "", SubMetricIconType.STEPS),
+                            SubMetricItem("Distance", String.format(Locale.getDefault(), "%.1f", distKm), "KM", SubMetricIconType.DISTANCE),
                             SubMetricItem("Goal Met", "${((calVal / goals.caloriesGoal.coerceAtLeast(1.0)) * 100).toInt()}%", "", SubMetricIconType.TARGET)
                         )
                     )
@@ -188,7 +188,7 @@ class HourlyMetricAggregator @Inject constructor() {
                         metricType = metricType,
                         hourlyValues = hourlyArray.toList(),
                         mainValue = effectiveWater.toDouble(),
-                        formattedMainValue = String.format(Locale.US, "%,d", effectiveWater),
+                        formattedMainValue = String.format(Locale.getDefault(), "%,d", effectiveWater),
                         unit = "ml",
                         goalValue = goal.toDouble(),
                         formattedGoal = "$goal ml",
@@ -227,7 +227,7 @@ class HourlyMetricAggregator @Inject constructor() {
                         formattedMainValue = "${hours}h ${mins}m",
                         unit = "",
                         goalValue = goals.sleepGoalHours,
-                        formattedGoal = String.format(Locale.US, "%.1f hrs", goals.sleepGoalHours),
+                        formattedGoal = String.format(Locale.getDefault(), "%.1f hrs", goals.sleepGoalHours),
                         subMetrics = listOf(
                             SubMetricItem("Goal Rate", "$goalPercent%", "", SubMetricIconType.TARGET),
                             SubMetricItem("Total Mins", "$effectiveMins", "MIN", SubMetricIconType.TIME),
@@ -301,12 +301,12 @@ class HourlyMetricAggregator @Inject constructor() {
                         metricType = metricType,
                         hourlyValues = hourlyArray.toList(),
                         mainValue = distKm,
-                        formattedMainValue = String.format(Locale.US, "%.2f", distKm),
+                        formattedMainValue = String.format(Locale.getDefault(), "%.2f", distKm),
                         unit = "km",
                         goalValue = null,
                         formattedGoal = null,
                         subMetrics = listOf(
-                            SubMetricItem("Steps", String.format(Locale.US, "%,d", stepsVal), "", SubMetricIconType.STEPS),
+                            SubMetricItem("Steps", String.format(Locale.getDefault(), "%,d", stepsVal), "", SubMetricIconType.STEPS),
                             SubMetricItem("Calories", "${calVal.toInt()}", "KCAL", SubMetricIconType.CALORIES),
                             SubMetricItem("Estimated M", "${effectiveMeters.toInt()}", "M", SubMetricIconType.DISTANCE)
                         )
@@ -328,12 +328,12 @@ class HourlyMetricAggregator @Inject constructor() {
                         metricType = metricType,
                         hourlyValues = hourlyArray,
                         mainValue = latestWeight,
-                        formattedMainValue = if (latestWeight > 0) String.format(Locale.US, "%.1f", latestWeight) else "--",
+                        formattedMainValue = if (latestWeight > 0) String.format(Locale.getDefault(), "%.1f", latestWeight) else "--",
                         unit = "kg",
                         goalValue = null,
                         formattedGoal = null,
                         subMetrics = listOf(
-                            SubMetricItem("Est. BMI", if (bmi > 0) String.format(Locale.US, "%.1f", bmi) else "--", "", SubMetricIconType.WEIGHT),
+                            SubMetricItem("Est. BMI", if (bmi > 0) String.format(Locale.getDefault(), "%.1f", bmi) else "--", "", SubMetricIconType.WEIGHT),
                             SubMetricItem("Category", if (bmi in 18.5..24.9) "Normal" else if (bmi > 0) "Monitored" else "--", "", SubMetricIconType.TARGET),
                             SubMetricItem("Logs Today", "${weightRecords.size}", "", SubMetricIconType.TREND)
                         )

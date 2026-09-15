@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.Favorite
@@ -48,43 +49,46 @@ fun DailyMetricsSection(
     ) {
         val steps = healthSummary.steps
         val stepsGoal = userGoals.stepsGoal
+        val stepsGoalStr = String.format(Locale.getDefault(), "%,d", stepsGoal)
         MetricCard(
-            icon = Icons.Default.DirectionsWalk,
+            icon = Icons.AutoMirrored.Filled.DirectionsWalk,
             iconTint = RingSteps,
             title = stringResource(R.string.steps),
-            value = String.format(Locale.US, "%,d", steps),
+            value = String.format(Locale.getDefault(), "%,d", steps),
             unit = stringResource(R.string.unit_steps),
             progress = if (stepsGoal > 0) steps.toFloat() / stepsGoal.toFloat() else null,
             progressColor = RingSteps,
-            subtitle = "Goal: ${String.format(Locale.US, "%,d", stepsGoal)}",
+            subtitle = stringResource(R.string.subtitle_goal_format, stepsGoalStr),
             onClick = { onMetricClick?.invoke(MetricType.STEPS) ?: onStepsClick?.invoke() }
         )
 
         val calories = healthSummary.caloriesBurned
         val caloriesGoal = userGoals.caloriesGoal
+        val calGoalStr = "${caloriesGoal.toInt()} ${stringResource(R.string.unit_kcal)}"
         MetricCard(
             icon = Icons.Default.LocalFireDepartment,
             iconTint = RingMove,
             title = stringResource(R.string.calories_burned),
-            value = String.format(Locale.US, "%,d", calories.toInt()),
+            value = String.format(Locale.getDefault(), "%,d", calories.toInt()),
             unit = stringResource(R.string.unit_kcal),
             progress = if (caloriesGoal > 0) (calories / caloriesGoal).toFloat() else null,
             progressColor = RingMove,
-            subtitle = "Goal: ${caloriesGoal.toInt()} ${stringResource(R.string.unit_kcal)}",
+            subtitle = stringResource(R.string.subtitle_goal_format, calGoalStr),
             onClick = { onMetricClick?.invoke(MetricType.CALORIES) }
         )
 
         val water = healthSummary.waterMilliliters
         val waterGoal = userGoals.waterGoalMilliliters
+        val waterGoalStr = "$waterGoal ${stringResource(R.string.unit_ml)}"
         MetricCard(
             icon = Icons.Default.WaterDrop,
             iconTint = RingWater,
             title = stringResource(R.string.water),
-            value = String.format(Locale.US, "%,d", water),
+            value = String.format(Locale.getDefault(), "%,d", water),
             unit = stringResource(R.string.unit_ml),
             progress = if (waterGoal > 0) water.toFloat() / waterGoal.toFloat() else null,
             progressColor = RingWater,
-            subtitle = "Goal: $waterGoal ${stringResource(R.string.unit_ml)}",
+            subtitle = stringResource(R.string.subtitle_goal_format, waterGoalStr),
             onClick = { onMetricClick?.invoke(MetricType.WATER) }
         )
 
@@ -96,6 +100,7 @@ fun DailyMetricsSection(
         } else {
             stringResource(R.string.no_data)
         }
+        val sleepGoalStr = "${userGoals.sleepGoalHours.toInt()} ${stringResource(R.string.unit_hours)}"
         MetricCard(
             icon = Icons.Default.Bedtime,
             iconTint = MetricSleep,
@@ -104,18 +109,19 @@ fun DailyMetricsSection(
             unit = "",
             progress = (sleepMinutes.toFloat() / (userGoals.sleepGoalHours * 60).toFloat()),
             progressColor = MetricSleep,
-            subtitle = "Goal: ${userGoals.sleepGoalHours.toInt()} ${stringResource(R.string.unit_hours)}",
+            subtitle = stringResource(R.string.subtitle_goal_format, sleepGoalStr),
             onClick = { onMetricClick?.invoke(MetricType.SLEEP) }
         )
 
         val heartRate = healthSummary.latestHeartRateBpm
+        val latestLabel = stringResource(R.string.latest)
         MetricCard(
             icon = Icons.Default.Favorite,
             iconTint = MetricHeartRate,
             title = stringResource(R.string.heart_rate),
             value = if (heartRate != null && heartRate > 0) "${heartRate.toInt()}" else stringResource(R.string.no_data),
             unit = if (heartRate != null && heartRate > 0) stringResource(R.string.unit_bpm) else "",
-            subtitle = if (heartRate != null && heartRate > 0) "Latest" else null,
+            subtitle = if (heartRate != null && heartRate > 0) latestLabel else null,
             onClick = { onMetricClick?.invoke(MetricType.HEART_RATE) }
         )
 
@@ -124,7 +130,7 @@ fun DailyMetricsSection(
             icon = Icons.Default.Straighten,
             iconTint = MetricDistance,
             title = stringResource(R.string.distance),
-            value = String.format(Locale.US, "%.2f", distanceKm),
+            value = String.format(Locale.getDefault(), "%.2f", distanceKm),
             unit = stringResource(R.string.unit_km),
             onClick = { onMetricClick?.invoke(MetricType.DISTANCE) }
         )
@@ -134,7 +140,7 @@ fun DailyMetricsSection(
             icon = Icons.Default.FitnessCenter,
             iconTint = MetricWeight,
             title = stringResource(R.string.weight),
-            value = if (weightKg != null && weightKg > 0) String.format(Locale.US, "%.1f", weightKg) else stringResource(R.string.no_data),
+            value = if (weightKg != null && weightKg > 0) String.format(Locale.getDefault(), "%.1f", weightKg) else stringResource(R.string.no_data),
             unit = if (weightKg != null && weightKg > 0) stringResource(R.string.unit_kg) else "",
             onClick = { onMetricClick?.invoke(MetricType.WEIGHT) }
         )

@@ -206,7 +206,7 @@ fun StepDetailScreen(
                             Spacer(modifier = Modifier.height(12.dp))
 
                             Text(
-                                text = String.format(Locale.US, "%,d", uiState.hourlyStepData.totalSteps),
+                                text = String.format(Locale.getDefault(), "%,d", uiState.hourlyStepData.totalSteps),
                                 style = MaterialTheme.typography.displayMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
@@ -339,9 +339,9 @@ fun StepDetailScreen(
 
                                 Row(verticalAlignment = Alignment.Bottom) {
                                     val distStr = if (uiState.hourlyStepData.distanceKm >= 1.0) {
-                                        String.format(Locale.US, "%.1f", uiState.hourlyStepData.distanceKm)
+                                        String.format(Locale.getDefault(), "%.1f", uiState.hourlyStepData.distanceKm)
                                     } else {
-                                        String.format(Locale.US, "%.2f", uiState.hourlyStepData.distanceKm)
+                                        String.format(Locale.getDefault(), "%.2f", uiState.hourlyStepData.distanceKm)
                                     }
                                     Text(
                                         text = "$distStr ",
@@ -350,7 +350,7 @@ fun StepDetailScreen(
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
-                                        text = stringResource(R.string.unit_km).uppercase(Locale.US),
+                                        text = stringResource(R.string.unit_km).uppercase(Locale.getDefault()),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.padding(bottom = 2.dp)
@@ -395,7 +395,7 @@ fun StepDetailScreen(
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
-                                        text = stringResource(R.string.unit_kcal).uppercase(Locale.US),
+                                        text = stringResource(R.string.unit_kcal).uppercase(Locale.getDefault()),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.padding(bottom = 2.dp)

@@ -63,7 +63,7 @@ fun HourlyStepChart(
                         strokeWidth = 1.dp.toPx()
                     )
 
-                    val formattedY = String.format(Locale.US, "%,d", yVal)
+                    val formattedY = String.format(Locale.getDefault(), "%,d", yVal)
                     val textLayout = textMeasurer.measure(
                         text = formattedY,
                         style = TextStyle(color = textColor, fontSize = 11.sp)

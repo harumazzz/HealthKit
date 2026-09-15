@@ -11,13 +11,24 @@ import androidx.navigation.compose.composable
 import com.haruma.health.kit.ui.detail.MetricDetailScreen
 import com.haruma.health.kit.ui.stepdetail.StepDetailScreen
 
+import androidx.compose.runtime.LaunchedEffect
+
 @Composable
 fun HealthNavHost(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    initialRoute: String? = null
 ) {
     val swiftEasing = CubicBezierEasing(0.25f, 0.1f, 0.25f, 1.0f)
     val swiftDuration = 280
+
+    LaunchedEffect(initialRoute) {
+        if (!initialRoute.isNullOrBlank()) {
+            navController.navigate(initialRoute) {
+                launchSingleTop = true
+            }
+        }
+    }
 
     NavHost(
         navController = navController,

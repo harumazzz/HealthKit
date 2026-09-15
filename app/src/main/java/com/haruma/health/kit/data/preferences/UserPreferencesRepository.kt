@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.haruma.health.kit.data.model.UserGoals
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -23,8 +24,8 @@ class UserPreferencesRepository @Inject constructor(
     private val keyCaloriesGoal = doublePreferencesKey("calories_goal")
     private val keyWaterGoal = intPreferencesKey("water_goal")
     private val keySleepGoal = doublePreferencesKey("sleep_goal")
-    private val keyLanguage = androidx.datastore.preferences.core.stringPreferencesKey("app_language")
-    private val keyThemeMode = androidx.datastore.preferences.core.stringPreferencesKey("theme_mode")
+    private val keyLanguage = stringPreferencesKey("app_language")
+    private val keyThemeMode = stringPreferencesKey("theme_mode")
 
     val userGoalsFlow: Flow<UserGoals> = context.dataStore.data.map { preferences ->
         UserGoals(

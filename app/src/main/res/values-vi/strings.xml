@@ -5,9 +5,6 @@
     <string name="nav_trends">Xu hướng</string>
     <string name="nav_settings">Cài đặt</string>
     <string name="privacy_policy">Chính sách bảo mật</string>
-    <string name="ready_for_phase_2">Sẵn sàng cho Giai đoạn 2</string>
-    <string name="ready_for_phase_3">Sẵn sàng cho Giai đoạn 3</string>
-    <string name="ready_for_phase_4">Sẵn sàng cho Giai đoạn 4</string>
 
     <string name="permission_required_title">Yêu cầu quyền Health Connect</string>
     <string name="permission_required_desc">Health Kit cần các quyền này để đọc và đồng bộ số bước chân hàng ngày, calo vận động, thời gian ngủ và các chỉ số sức khỏe của bạn.</string>
@@ -94,4 +91,7 @@
     <string name="settings_developer">Nhà phát triển</string>
     <string name="settings_developer_name">Haruma</string>
     <string name="settings_close">Đóng</string>
+    <string name="widget_description">Tóm tắt hoạt động sức khỏe hàng ngày với vòng tiến trình, bước chân, calo và thời gian.</string>
+    <string name="subtitle_goal_format">Mục tiêu: %1$s</string>
+    <string name="latest">Mới nhất</string>
 </resources>

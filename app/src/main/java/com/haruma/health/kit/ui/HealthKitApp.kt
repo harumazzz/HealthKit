@@ -36,7 +36,8 @@ private tailrec fun Context.findActivity(): ComponentActivity? = when (this) {
 
 @Composable
 fun HealthKitApp(
-    preferencesRepository: UserPreferencesRepository
+    preferencesRepository: UserPreferencesRepository,
+    initialRoute: String? = null
 ) {
     val appLanguage by preferencesRepository.languageFlow.collectAsState(initial = "en")
     val themeMode by preferencesRepository.themeModeFlow.collectAsState(initial = "system")
@@ -83,7 +84,7 @@ fun HealthKitApp(
         LocalContext provides localizedContext
     ) {
         HealthKitTheme(darkTheme = isDarkTheme) {
-            MainScreen()
+            MainScreen(initialRoute = initialRoute)
         }
     }
 }

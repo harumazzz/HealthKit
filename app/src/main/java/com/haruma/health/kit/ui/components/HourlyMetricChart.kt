@@ -68,9 +68,9 @@ fun HourlyMetricChart(
                     )
 
                     val formattedY = if (maxY >= 100) {
-                        String.format(Locale.US, "%,d", yVal.toInt())
+                        String.format(Locale.getDefault(), "%,d", yVal.toInt())
                     } else {
-                        String.format(Locale.US, "%.1f", yVal)
+                        String.format(Locale.getDefault(), "%.1f", yVal)
                     }
 
                     val textLayout = textMeasurer.measure(

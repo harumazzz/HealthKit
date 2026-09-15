@@ -128,9 +128,9 @@ class TrendsViewModel @Inject constructor(
             }
 
             val formattedGoalValue = when (selectedMetric) {
-                DetailMetric.STEPS -> String.format(Locale.US, "%,d steps", currentUserGoals.stepsGoal)
-                DetailMetric.CALORIES -> String.format(Locale.US, "%.0f kcal", currentUserGoals.caloriesGoal)
-                DetailMetric.SLEEP -> String.format(Locale.US, "%.1f hrs", currentUserGoals.sleepGoalHours)
+                DetailMetric.STEPS -> String.format(Locale.getDefault(), "%,d steps", currentUserGoals.stepsGoal)
+                DetailMetric.CALORIES -> String.format(Locale.getDefault(), "%.0f kcal", currentUserGoals.caloriesGoal)
+                DetailMetric.SLEEP -> String.format(Locale.getDefault(), "%.1f hrs", currentUserGoals.sleepGoalHours)
                 DetailMetric.HEART_RATE -> null
             }
 
@@ -139,7 +139,7 @@ class TrendsViewModel @Inject constructor(
             val chartBars = rawSummaries.map { summary ->
                 val value = extractMetricValue(summary, selectedMetric)
                 val label = if (timeRange == DetailTimeRange.PAST_7_DAYS) {
-                    summary.date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US)
+                    summary.date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
                 } else {
                     "${summary.date.monthValue}/${summary.date.dayOfMonth}"
                 }
@@ -186,10 +186,10 @@ class TrendsViewModel @Inject constructor(
 
     private fun formatMetricValue(value: Double, metric: DetailMetric): String {
         return when (metric) {
-            DetailMetric.STEPS -> String.format(Locale.US, "%,d steps", value.toLong())
-            DetailMetric.CALORIES -> String.format(Locale.US, "%.0f kcal", value)
-            DetailMetric.SLEEP -> String.format(Locale.US, "%.1f hrs", value)
-            DetailMetric.HEART_RATE -> if (value > 0.0) String.format(Locale.US, "%.0f bpm", value) else "No data"
+            DetailMetric.STEPS -> String.format(Locale.getDefault(), "%,d steps", value.toLong())
+            DetailMetric.CALORIES -> String.format(Locale.getDefault(), "%.0f kcal", value)
+            DetailMetric.SLEEP -> String.format(Locale.getDefault(), "%.1f hrs", value)
+            DetailMetric.HEART_RATE -> if (value > 0.0) String.format(Locale.getDefault(), "%.0f bpm", value) else "No data"
         }
     }
 
@@ -224,9 +224,9 @@ class TrendsViewModel @Inject constructor(
         val formattedAvg = formatMetricValue(dailyAvg, metric)
         val formattedPeak = formatMetricValue(peakValue, metric)
         val formattedTotal = when (metric) {
-            DetailMetric.STEPS -> String.format(Locale.US, "%,d steps", total.toLong())
-            DetailMetric.CALORIES -> String.format(Locale.US, "%,d kcal", total.toLong())
-            DetailMetric.SLEEP -> String.format(Locale.US, "%.1f hrs", total)
+            DetailMetric.STEPS -> String.format(Locale.getDefault(), "%,d steps", total.toLong())
+            DetailMetric.CALORIES -> String.format(Locale.getDefault(), "%,d kcal", total.toLong())
+            DetailMetric.SLEEP -> String.format(Locale.getDefault(), "%.1f hrs", total)
             DetailMetric.HEART_RATE -> formattedAvg
         }
 
@@ -258,7 +258,7 @@ class TrendsViewModel @Inject constructor(
             val matchingBars = bars.filter { it.date.dayOfWeek == dow && it.value > 0.0 }
             val avg = if (matchingBars.isNotEmpty()) matchingBars.sumOf { it.value } / matchingBars.size else 0.0
             DayAverage(
-                dayLabel = dow.getDisplayName(TextStyle.SHORT, Locale.US),
+                dayLabel = dow.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
                 value = avg
             )
         }

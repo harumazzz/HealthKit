@@ -7,9 +7,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.Bedtime
-import androidx.compose.material.icons.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material3.FilterChip
@@ -74,7 +75,7 @@ fun MetricSelectorSection(
             MetricChipItem(
                 selected = selectedMetric == DetailMetric.STEPS,
                 label = stringResource(R.string.steps),
-                icon = Icons.Default.DirectionsWalk,
+                icon = Icons.AutoMirrored.Filled.DirectionsWalk,
                 color = RingSteps,
                 onClick = { onMetricSelected(DetailMetric.STEPS) }
             )
@@ -116,7 +117,7 @@ fun MetricChipItem(
         selected = selected,
         onClick = onClick,
         label = { Text(label) },
-        shape = androidx.compose.foundation.shape.CircleShape,
+        shape = CircleShape,
         leadingIcon = {
             Icon(
                 imageVector = icon,

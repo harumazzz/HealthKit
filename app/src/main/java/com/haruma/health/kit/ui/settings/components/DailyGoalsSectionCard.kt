@@ -1,6 +1,7 @@
 package com.haruma.health.kit.ui.settings.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.LocalFireDepartment
@@ -31,7 +32,7 @@ fun DailyGoalsSectionCard(
         modifier = modifier
     ) {
         GoalItemRow(
-            icon = Icons.Default.DirectionsWalk,
+            icon = Icons.AutoMirrored.Filled.DirectionsWalk,
             iconTint = RingSteps,
             title = stringResource(R.string.settings_steps_goal),
             value = "${userGoals.stepsGoal} ${stringResource(R.string.unit_steps)}",

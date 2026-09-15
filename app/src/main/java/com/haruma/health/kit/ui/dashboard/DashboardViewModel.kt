@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.haruma.health.kit.data.health.HealthConnectManager
 import com.haruma.health.kit.data.health.HealthPermissions
 import com.haruma.health.kit.data.preferences.UserPreferencesRepository
+import com.haruma.health.kit.ui.widget.HealthKitWidgetProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val healthConnectManager: HealthConnectManager,
-    private val preferencesRepository: UserPreferencesRepository
+    private val preferencesRepository: UserPreferencesRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     val permissionContract = healthConnectManager.createRequestPermissionResultContract()
@@ -30,6 +33,7 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             preferencesRepository.userGoalsFlow.collect { goals ->
                 _uiState.update { it.copy(userGoals = goals) }
+                HealthKitWidgetProvider.updateAllWidgets(context)
             }
         }
         checkPermissionsAndLoadData()
@@ -98,6 +102,7 @@ class DashboardViewModel @Inject constructor(
                     isLoading = false
                 )
             }
+            HealthKitWidgetProvider.updateAllWidgets(context)
         }
     }
 

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.OpenInNew
@@ -135,7 +136,7 @@ fun HealthConnectSectionCard(
             icon = Icons.Default.Favorite,
             iconTint = Color(0xFFE91E63),
             title = stringResource(R.string.settings_hc_manage_perms),
-            trailingIcon = Icons.Default.OpenInNew,
+            trailingIcon = Icons.AutoMirrored.Filled.OpenInNew,
             onClick = onManagePermissionsClick
         )
     }

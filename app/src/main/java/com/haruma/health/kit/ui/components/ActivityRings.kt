@@ -197,14 +197,14 @@ fun ActivityRings(
                 RingLegendItem(
                     color = RingSteps,
                     label = stringResource(R.string.steps),
-                    value = String.format(Locale.US, "%,d", steps),
-                    target = "/${String.format(Locale.US, "%,d", stepsGoal)}"
+                    value = String.format(Locale.getDefault(), "%,d", steps),
+                    target = "/${String.format(Locale.getDefault(), "%,d", stepsGoal)}"
                 )
                 RingLegendItem(
                     color = RingWater,
                     label = stringResource(R.string.water),
-                    value = String.format(Locale.US, "%,d", water),
-                    target = "/${String.format(Locale.US, "%,d", waterGoal)} ${stringResource(R.string.unit_ml)}"
+                    value = String.format(Locale.getDefault(), "%,d", water),
+                    target = "/${String.format(Locale.getDefault(), "%,d", waterGoal)} ${stringResource(R.string.unit_ml)}"
                 )
             }
         }

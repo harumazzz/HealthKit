@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.Favorite
@@ -65,7 +66,7 @@ fun SubMetricsGridCard(
                     SubMetricIconType.TIME -> Icons.Default.Schedule
                     SubMetricIconType.DISTANCE -> Icons.Default.LocationOn
                     SubMetricIconType.CALORIES -> Icons.Default.LocalFireDepartment
-                    SubMetricIconType.STEPS -> Icons.Default.DirectionsWalk
+                    SubMetricIconType.STEPS -> Icons.AutoMirrored.Filled.DirectionsWalk
                     SubMetricIconType.WATER -> Icons.Default.WaterDrop
                     SubMetricIconType.SLEEP -> Icons.Default.Bedtime
                     SubMetricIconType.HEART -> Icons.Default.Favorite
@@ -104,7 +105,7 @@ fun SubMetricsGridCard(
                         )
                         if (sub.unit.isNotBlank()) {
                             Text(
-                                text = sub.unit.uppercase(Locale.US),
+                                text = sub.unit.uppercase(Locale.getDefault()),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(bottom = 2.dp)
