@@ -114,4 +114,8 @@
     <string name="feedback_submit">Gửi phản hồi</string>
     <string name="feedback_submitted_toast">Cảm ơn bạn! Phản hồi đã được gửi thành công.</string>
     <string name="feedback_empty_error">Vui lòng nhập nội dung phản hồi trước khi gửi.</string>
+    <string name="splash_slogan">Đồng hành cùng sức khỏe của bạn</string>
+    <string name="splash_status_initializing">Đang khởi tạo ứng dụng...</string>
+    <string name="splash_status_config">Đang tải cấu hình...</string>
+    <string name="splash_status_ready">Sẵn sàng</string>
 </resources>

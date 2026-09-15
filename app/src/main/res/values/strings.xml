@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Health Kit</string>
     <string name="nav_dashboard">Dashboard</string>
     <string name="nav_detail">Trends</string>
     <string name="nav_trends">Trends</string>
@@ -130,4 +129,8 @@
     <string name="rate_us_hint_3">Thank you for your rating!</string>
     <string name="rate_us_hint_4">Great to know you enjoy using Health Kit!</string>
     <string name="rate_us_hint_5">Thank you so much for your support!</string>
+    <string name="splash_slogan">Your Personal Health Companion</string>
+    <string name="splash_status_initializing">Initializing app...</string>
+    <string name="splash_status_config">Loading configuration...</string>
+    <string name="splash_status_ready">Ready</string>
 </resources>

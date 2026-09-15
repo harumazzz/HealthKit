@@ -18,6 +18,7 @@ sealed class Screen(
     val title: String,
     val icon: ImageVector
 ) {
+    data object Splash : Screen("splash", R.string.app_name, "Splash", Icons.Default.Dashboard)
     data object Dashboard : Screen("dashboard", R.string.nav_dashboard, "Dashboard", Icons.Default.Dashboard)
     data object Trends : Screen("trends", R.string.nav_trends, "Trends", Icons.Default.BarChart)
     data object Settings : Screen("settings", R.string.nav_settings, "Settings", Icons.Default.Settings)

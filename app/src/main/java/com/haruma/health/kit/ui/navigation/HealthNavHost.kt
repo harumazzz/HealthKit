@@ -17,6 +17,8 @@ import com.haruma.health.kit.ui.feedback.FeedbackScreen
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
+import com.haruma.health.kit.ui.splash.SplashScreen
+
 @Composable
 fun HealthNavHost(
     navController: NavHostController,
@@ -26,17 +28,9 @@ fun HealthNavHost(
     val swiftEasing = CubicBezierEasing(0.25f, 0.1f, 0.25f, 1.0f)
     val swiftDuration = 280
 
-    LaunchedEffect(initialRoute) {
-        if (!initialRoute.isNullOrBlank()) {
-            navController.navigate(initialRoute) {
-                launchSingleTop = true
-            }
-        }
-    }
-
     NavHost(
         navController = navController,
-        startDestination = Screen.MainTab.route,
+        startDestination = Screen.Splash.route,
         modifier = modifier,
         enterTransition = {
             slideIntoContainer(
@@ -63,6 +57,18 @@ fun HealthNavHost(
             )
         }
     ) {
+        composable(Screen.Splash.route) {
+            SplashScreen(
+                onInitializationFinished = {
+                    val targetRoute = if (!initialRoute.isNullOrBlank()) initialRoute else Screen.MainTab.route
+                    navController.navigate(targetRoute) {
+                        popUpTo(Screen.Splash.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+        }
         composable(Screen.MainTab.route) {
             MainTabScreen(
                 onNavigateToStepDetail = {
