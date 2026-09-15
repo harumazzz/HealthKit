@@ -23,6 +23,7 @@ class UserPreferencesRepository @Inject constructor(
     private val keyCaloriesGoal = doublePreferencesKey("calories_goal")
     private val keyWaterGoal = intPreferencesKey("water_goal")
     private val keySleepGoal = doublePreferencesKey("sleep_goal")
+    private val keyLanguage = androidx.datastore.preferences.core.stringPreferencesKey("app_language")
 
     val userGoalsFlow: Flow<UserGoals> = context.dataStore.data.map { preferences ->
         UserGoals(
@@ -31,6 +32,10 @@ class UserPreferencesRepository @Inject constructor(
             waterGoalMilliliters = preferences[keyWaterGoal] ?: 2000,
             sleepGoalHours = preferences[keySleepGoal] ?: 8.0
         )
+    }
+
+    val languageFlow: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[keyLanguage] ?: "en"
     }
 
     suspend fun updateStepsGoal(steps: Long) {
@@ -54,6 +59,12 @@ class UserPreferencesRepository @Inject constructor(
     suspend fun updateSleepGoal(hours: Double) {
         context.dataStore.edit { preferences ->
             preferences[keySleepGoal] = hours
+        }
+    }
+
+    suspend fun updateLanguage(languageCode: String) {
+        context.dataStore.edit { preferences ->
+            preferences[keyLanguage] = languageCode
         }
     }
 }

@@ -1,0 +1,93 @@
+<resources>
+    <string name="app_name">Health Kit</string>
+    <string name="nav_dashboard">Bảng điều khiển</string>
+    <string name="nav_detail">Xu hướng</string>
+    <string name="nav_trends">Xu hướng</string>
+    <string name="nav_settings">Cài đặt</string>
+    <string name="privacy_policy">Chính sách bảo mật</string>
+    <string name="ready_for_phase_2">Sẵn sàng cho Giai đoạn 2</string>
+    <string name="ready_for_phase_3">Sẵn sàng cho Giai đoạn 3</string>
+    <string name="ready_for_phase_4">Sẵn sàng cho Giai đoạn 4</string>
+
+    <string name="permission_required_title">Yêu cầu quyền Health Connect</string>
+    <string name="permission_required_desc">Health Kit cần các quyền này để đọc và đồng bộ số bước chân hàng ngày, calo vận động, thời gian ngủ và các chỉ số sức khỏe của bạn.</string>
+    <string name="grant_permissions">Cấp quyền</string>
+    <string name="open_settings">Mở cài đặt</string>
+    <string name="permission_not_available">Health Connect chưa khả dụng hoặc cần được cài đặt trên thiết bị này.</string>
+    <string name="install_health_connect">Cài đặt Health Connect</string>
+
+    <string name="date_today">Hôm nay</string>
+    <string name="date_yesterday">Hôm qua</string>
+    <string name="date_select">Chọn ngày</string>
+    <string name="previous_day">Ngày trước</string>
+    <string name="next_day">Ngày sau</string>
+
+    <string name="activity_summary">Hoạt động trong ngày</string>
+    <string name="calories_burned">Calo</string>
+    <string name="steps">Bước chân</string>
+    <string name="water">Nước</string>
+    <string name="sleep">Giấc ngủ</string>
+    <string name="heart_rate">Nhịp tim</string>
+    <string name="distance">Quãng đường</string>
+    <string name="weight">Cân nặng</string>
+
+    <string name="unit_kcal">kcal</string>
+    <string name="unit_steps">bước</string>
+    <string name="unit_ml">ml</string>
+    <string name="unit_hours">giờ</string>
+    <string name="unit_bpm">bpm</string>
+    <string name="unit_km">km</string>
+    <string name="unit_kg">kg</string>
+
+    <string name="quick_log">Ghi nhanh</string>
+    <string name="log_type">Loại ghi nhận</string>
+    <string name="select_type">Chọn loại</string>
+    <string name="log_water">Ghi nhận nước uống</string>
+    <string name="log_weight">Ghi nhận cân nặng</string>
+    <string name="amount_ml">Lượng nước (ml)</string>
+    <string name="weight_kg">Cân nặng (kg)</string>
+    <string name="save">Lưu</string>
+    <string name="cancel">Hủy</string>
+    <string name="quick_add_water">+%1$d ml</string>
+    <string name="logged_successfully">Đã lưu thành công</string>
+    <string name="no_data">Không có dữ liệu</string>
+    <string name="time_range_7d">7 ngày qua</string>
+    <string name="time_range_30d">30 ngày qua</string>
+    <string name="stat_daily_avg">Trung bình ngày</string>
+    <string name="stat_peak_day">Ngày cao nhất</string>
+    <string name="stat_total">Tổng cộng</string>
+    <string name="stat_goal">Mục tiêu</string>
+    <string name="stat_goal_met">Đạt mục tiêu</string>
+    <string name="tap_bar_hint">Chạm vào cột để xem chi tiết</string>
+    <string name="no_historical_data">Không tìm thấy dữ liệu sức khỏe cho chu kỳ này</string>
+    <string name="historical_trends">Xu hướng lịch sử</string>
+    <string name="goal_achievement_rate">Tỉ lệ đạt mục tiêu</string>
+
+    <string name="settings_section_daily_goals">Mục tiêu hàng ngày</string>
+    <string name="settings_section_daily_goals_desc">Tùy chỉnh mục tiêu vận động và sức khỏe của bạn</string>
+    <string name="settings_steps_goal">Bước chân mỗi ngày</string>
+    <string name="settings_calories_goal">Calo tiêu hao</string>
+    <string name="settings_water_goal">Lượng nước uống</string>
+    <string name="settings_sleep_goal">Thời gian ngủ</string>
+    <string name="settings_edit_goal">Chỉnh sửa mục tiêu</string>
+    <string name="settings_enter_target">Nhập giá trị mục tiêu</string>
+    <string name="settings_section_general">Tùy chọn</string>
+    <string name="settings_language">Ngôn ngữ</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_language_vi">Tiếng Việt</string>
+    <string name="settings_section_health_connect">Health Connect</string>
+    <string name="settings_hc_status_active">Đã cấp quyền</string>
+    <string name="settings_hc_status_needs_perms">Cần cấp quyền</string>
+    <string name="settings_hc_status_unavailable">Không khả dụng</string>
+    <string name="settings_hc_manage_perms">Quản lý quyền</string>
+    <string name="settings_hc_manage_perms_desc">Cấu hình quyền đọc và ghi dữ liệu trong Cài đặt hệ thống</string>
+    <string name="settings_section_about">Thông tin &amp; Pháp lý</string>
+    <string name="settings_terms_of_use">Điều khoản sử dụng</string>
+    <string name="settings_about_app">Về Health Kit</string>
+    <string name="settings_app_version">Phiên bản</string>
+    <string name="settings_about_dialog_desc">Health Kit là ứng dụng theo dõi sức khỏe cá nhân ưu tiên quyền riêng tư trên Android. Sử dụng Google Health Connect làm nguồn dữ liệu duy nhất, toàn bộ chỉ số sức khỏe của bạn luôn được mã hóa và lưu trữ cục bộ trên thiết bị.</string>
+    <string name="settings_about_features">Kiến trúc: Jetpack Compose, Health Connect SDK, Dagger Hilt và DataStore.</string>
+    <string name="settings_developer">Nhà phát triển</string>
+    <string name="settings_developer_name">Haruma</string>
+    <string name="settings_close">Đóng</string>
+</resources>

@@ -62,4 +62,32 @@
     <string name="no_historical_data">No health data found for this period</string>
     <string name="historical_trends">Historical Trends</string>
     <string name="goal_achievement_rate">Goal Rate</string>
+
+    <string name="settings_section_daily_goals">Daily Goals</string>
+    <string name="settings_section_daily_goals_desc">Customize your daily activity and wellness targets</string>
+    <string name="settings_steps_goal">Daily Steps</string>
+    <string name="settings_calories_goal">Active Calories</string>
+    <string name="settings_water_goal">Hydration Target</string>
+    <string name="settings_sleep_goal">Sleep Duration</string>
+    <string name="settings_edit_goal">Edit Target</string>
+    <string name="settings_enter_target">Enter target value</string>
+    <string name="settings_section_general">Preferences</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_language_vi">Tiếng Việt</string>
+    <string name="settings_section_health_connect">Health Connect</string>
+    <string name="settings_hc_status_active">Permissions Granted</string>
+    <string name="settings_hc_status_needs_perms">Permissions Required</string>
+    <string name="settings_hc_status_unavailable">Unavailable</string>
+    <string name="settings_hc_manage_perms">Manage Permissions</string>
+    <string name="settings_hc_manage_perms_desc">Configure read and write permissions in System Settings</string>
+    <string name="settings_section_about">About &amp; Legal</string>
+    <string name="settings_terms_of_use">Terms of Use</string>
+    <string name="settings_about_app">About Health Kit</string>
+    <string name="settings_app_version">Version</string>
+    <string name="settings_about_dialog_desc">Health Kit is a privacy-first personal health tracking application for Android. Powered directly by Google Health Connect as its single source of truth, your personal health metrics remain strictly encrypted and stored on your device.</string>
+    <string name="settings_about_features">Architecture: Jetpack Compose, Health Connect SDK, Dagger Hilt, and DataStore.</string>
+    <string name="settings_developer">Developer</string>
+    <string name="settings_developer_name">Haruma</string>
+    <string name="settings_close">Close</string>
 </resources>

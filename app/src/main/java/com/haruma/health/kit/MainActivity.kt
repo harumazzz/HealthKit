@@ -1,5 +1,9 @@
 package com.haruma.health.kit
 
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,56 +15,96 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.haruma.health.kit.data.preferences.UserPreferencesRepository
 import com.haruma.health.kit.ui.navigation.HealthNavHost
 import com.haruma.health.kit.ui.navigation.Screen
 import com.haruma.health.kit.ui.theme.HealthKitTheme
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
+import javax.inject.Inject
+
+private class LocalizedContextWrapper(
+    base: Context,
+    private val configContext: Context
+) : ContextWrapper(base) {
+    override fun getResources(): Resources = configContext.resources
+}
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var preferencesRepository: UserPreferencesRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            HealthKitTheme {
-                val navController = rememberNavController()
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
+            val appLanguage by preferencesRepository.languageFlow.collectAsState(initial = "en")
+            val locale = remember(appLanguage) { Locale.forLanguageTag(appLanguage) }
+            val currentConfig = LocalConfiguration.current
+            val updatedConfig = remember(appLanguage, currentConfig) {
+                Configuration(currentConfig).apply {
+                    setLocale(locale)
+                }
+            }
+            val currentContext = LocalContext.current
+            val localizedContext = remember(appLanguage, currentContext) {
+                val configContext = currentContext.createConfigurationContext(updatedConfig)
+                LocalizedContextWrapper(currentContext, configContext)
+            }
 
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    bottomBar = {
-                        NavigationBar {
-                            Screen.bottomNavItems.forEach { screen ->
-                                NavigationBarItem(
-                                    icon = { Icon(screen.icon, contentDescription = screen.title) },
-                                    label = { Text(screen.title) },
-                                    selected = currentRoute == screen.route,
-                                    onClick = {
-                                        if (currentRoute != screen.route) {
-                                            navController.navigate(screen.route) {
-                                                popUpTo(navController.graph.findStartDestination().id) {
-                                                    saveState = true
+            CompositionLocalProvider(
+                LocalConfiguration provides updatedConfig,
+                LocalContext provides localizedContext
+            ) {
+                HealthKitTheme {
+                    val navController = rememberNavController()
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    val currentRoute = navBackStackEntry?.destination?.route
+
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        bottomBar = {
+                            NavigationBar {
+                                Screen.bottomNavItems.forEach { screen ->
+                                    val itemTitle = stringResource(screen.titleResId)
+                                    NavigationBarItem(
+                                        icon = { Icon(screen.icon, contentDescription = itemTitle) },
+                                        label = { Text(itemTitle) },
+                                        selected = currentRoute == screen.route,
+                                        onClick = {
+                                            if (currentRoute != screen.route) {
+                                                navController.navigate(screen.route) {
+                                                    popUpTo(navController.graph.findStartDestination().id) {
+                                                        saveState = true
+                                                    }
+                                                    launchSingleTop = true
+                                                    restoreState = true
                                                 }
-                                                launchSingleTop = true
-                                                restoreState = true
                                             }
                                         }
-                                    }
-                                )
+                                    )
+                                }
                             }
                         }
+                    ) { innerPadding ->
+                        HealthNavHost(
+                            navController = navController,
+                            modifier = Modifier.padding(innerPadding)
+                        )
                     }
-                ) { innerPadding ->
-                    HealthNavHost(
-                        navController = navController,
-                        modifier = Modifier.padding(innerPadding)
-                    )
                 }
             }
         }

@@ -95,9 +95,12 @@ app/src/main/java/com/haruma/health/kit/
 
 ---
 
-### Giai đoạn 4: Settings Screen, Goals & Google Play Store Compliance
-- [ ] Cài đặt mục tiêu hàng ngày (Daily Goals): Tùy chỉnh bước chân, calo, nước uống và lưu tức thì vào DataStore.
-- [ ] Quản lý liên kết Health Connect: Nút mở trực tiếp trang cài đặt quyền Health Connect của hệ điều hành.
-- [ ] Mục Chính sách quyền riêng tư (Privacy Policy): Mở liên kết Web qua Chrome Custom Tabs / Trình duyệt.
-- [ ] Kiểm thử toàn diện trên thiết bị / máy ảo (flow xin quyền, query dữ liệu hôm nay/hôm qua, ghi dữ liệu).
-- [ ] Cấu hình Proguard/R8 rules sẵn sàng cho bản phát hành Release lên Google Play Store.
+### Giai đoạn 4: Settings Screen, Goals & Google Play Store Compliance (ĐÃ HOÀN THÀNH)
+- [x] Cài đặt mục tiêu hàng ngày (Daily Goals): Tùy chỉnh bước chân, calo, nước uống và lưu tức thì vào DataStore.
+- [x] Cài đặt ngôn ngữ (Language): Tùy chỉnh ngôn ngữ (English, Vietnamese).
+- [x] Quản lý liên kết Health Connect: Nút mở trực tiếp trang cài đặt quyền Health Connect của hệ điều hành.
+- [x] Mục Chính sách quyền riêng tư (Privacy Policy): Mở liên kết Web qua Chrome Custom Tabs / Trình duyệt.
+- [x] Mục About us: Hiển thị thông tin về ứng dụng.
+- [x] Mục Term of Use: Mở liên kết Web qua Chrome Custom Tabs / Trình duyệt.
+- [x] Mục Version: Hiển thị phiên bản hiện tại của ứng dụng.
+- [x] Cấu hình Proguard/R8 rules sẵn sàng cho bản phát hành Release lên Google Play Store.
