@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.core.net.toUri
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
@@ -22,19 +23,23 @@ import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.health.connect.client.units.Mass
 import androidx.health.connect.client.units.Volume
 import com.haruma.health.kit.data.model.DailyHealthSummary
+import com.haruma.health.kit.data.model.HourlyMetricData
+import com.haruma.health.kit.data.model.HourlyStepData
+import com.haruma.health.kit.data.model.MetricType
+import com.haruma.health.kit.data.model.UserGoals
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
 import java.time.ZoneId
-import java.time.ZoneOffset
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class HealthConnectManager @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val hourlyMetricAggregator: HourlyMetricAggregator
 ) {
     val healthConnectClient by lazy {
         if (isSupported()) HealthConnectClient.getOrCreate(context) else null
@@ -133,6 +138,28 @@ class HealthConnectManager @Inject constructor(
         } catch (_: Exception) {
             DailyHealthSummary(date = date)
         }
+    }
+
+    suspend fun getHourlyStepData(date: LocalDate): HourlyStepData {
+        return hourlyMetricAggregator.getHourlyStepData(
+            client = healthConnectClient,
+            date = date,
+            getDailySummary = ::getDailyHealthSummary
+        )
+    }
+
+    suspend fun getHourlyMetricData(
+        date: LocalDate,
+        metricType: MetricType,
+        goals: UserGoals
+    ): HourlyMetricData {
+        return hourlyMetricAggregator.getHourlyMetricData(
+            client = healthConnectClient,
+            date = date,
+            metricType = metricType,
+            goals = goals,
+            getDailySummary = ::getDailyHealthSummary
+        )
     }
 
     suspend fun getHistoricalDailySummaries(startDate: LocalDate, endDate: LocalDate): List<DailyHealthSummary> {
@@ -257,14 +284,14 @@ class HealthConnectManager @Inject constructor(
 
     fun openInstallHealthConnect(context: Context) {
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse("market://details?id=com.google.android.apps.healthdata")
+            data = "market://details?id=com.google.android.apps.healthdata".toUri()
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         try {
             context.startActivity(intent)
         } catch (_: Exception) {
             val webIntent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata")
+                data = "https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata".toUri()
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             try {
@@ -274,4 +301,3 @@ class HealthConnectManager @Inject constructor(
         }
     }
 }
-

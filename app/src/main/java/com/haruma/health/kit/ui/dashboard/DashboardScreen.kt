@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -46,9 +47,13 @@ import com.haruma.health.kit.ui.components.HealthConnectUnavailableCard
 import com.haruma.health.kit.ui.components.HealthPermissionCard
 import com.haruma.health.kit.ui.components.QuickLogSheet
 
+import com.haruma.health.kit.data.model.MetricType
+
 @Composable
 fun DashboardScreen(
     modifier: Modifier = Modifier,
+    onNavigateToStepDetail: (() -> Unit)? = null,
+    onNavigateToMetricDetail: ((MetricType) -> Unit)? = null,
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -87,6 +92,7 @@ fun DashboardScreen(
             if (uiState.hasPermissions) {
                 FloatingActionButton(
                     onClick = { viewModel.setQuickLogSheetVisible(true) },
+                    shape = CircleShape,
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
@@ -155,7 +161,9 @@ fun DashboardScreen(
                                 healthSummary = uiState.healthSummary,
                                 userGoals = uiState.userGoals,
                                 onLogWaterClick = { viewModel.setQuickLogSheetVisible(true) },
-                                onLogWeightClick = { viewModel.setQuickLogSheetVisible(true) }
+                                onLogWeightClick = { viewModel.setQuickLogSheetVisible(true) },
+                                onStepsClick = onNavigateToStepDetail,
+                                onMetricClick = onNavigateToMetricDetail
                             )
                         }
                     }

@@ -8,6 +8,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.haruma.health.kit.R
 
+import androidx.compose.material.icons.filled.DirectionsWalk
+
 sealed class Screen(
     val route: String,
     @StringRes val titleResId: Int,
@@ -17,9 +19,12 @@ sealed class Screen(
     data object Dashboard : Screen("dashboard", R.string.nav_dashboard, "Dashboard", Icons.Default.Dashboard)
     data object Trends : Screen("trends", R.string.nav_trends, "Trends", Icons.Default.BarChart)
     data object Settings : Screen("settings", R.string.nav_settings, "Settings", Icons.Default.Settings)
+    data object StepDetail : Screen("step_detail", R.string.steps, "Step Detail", Icons.Default.DirectionsWalk)
+    data object MainTab : Screen("main_tab", R.string.nav_dashboard, "Main Tab", Icons.Default.Dashboard)
 
     companion object {
         val Detail = Trends
         val bottomNavItems = listOf(Dashboard, Trends, Settings)
+        fun metricDetailRoute(metricType: String) = "detail/$metricType"
     }
 }

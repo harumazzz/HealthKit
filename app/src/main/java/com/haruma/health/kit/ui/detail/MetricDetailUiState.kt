@@ -1,5 +1,7 @@
 package com.haruma.health.kit.ui.detail
 
+import com.haruma.health.kit.data.model.HourlyMetricData
+import com.haruma.health.kit.data.model.MetricType
 import java.time.LocalDate
 
 enum class DetailTimeRange(val days: Long) {
@@ -41,13 +43,11 @@ data class SummaryStatistics(
 )
 
 data class MetricDetailUiState(
-    val timeRange: DetailTimeRange = DetailTimeRange.PAST_7_DAYS,
-    val selectedMetric: DetailMetric = DetailMetric.STEPS,
-    val chartBars: List<ChartBarData> = emptyList(),
-    val weekdayAverages: List<DayAverage> = emptyList(),
-    val selectedBarIndex: Int? = null,
-    val summaryStats: SummaryStatistics = SummaryStatistics(),
+    val selectedDate: LocalDate = LocalDate.now(),
+    val metricType: MetricType = MetricType.STEPS,
+    val hourlyData: HourlyMetricData = HourlyMetricData(date = LocalDate.now(), metricType = MetricType.STEPS),
     val isLoading: Boolean = true,
+    val showGoalSheet: Boolean = false,
     val hasPermissions: Boolean = false,
     val isHealthConnectAvailable: Boolean = true
 )

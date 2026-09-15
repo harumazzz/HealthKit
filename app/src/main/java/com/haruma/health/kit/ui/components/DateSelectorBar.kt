@@ -95,12 +95,12 @@ fun DateSelectorBar(
 
             Row(
                 modifier = Modifier
-                    .clip(MaterialTheme.shapes.medium)
+                    .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.surface)
                     .border(
                         1.dp,
                         MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f),
-                        MaterialTheme.shapes.medium
+                        CircleShape
                     )
                     .clickable { showDatePicker = true }
                     .padding(horizontal = 16.dp, vertical = 10.dp),

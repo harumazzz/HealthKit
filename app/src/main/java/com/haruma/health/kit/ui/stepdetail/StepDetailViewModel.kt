@@ -1,11 +1,8 @@
-package com.haruma.health.kit.ui.detail
+package com.haruma.health.kit.ui.stepdetail
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haruma.health.kit.data.health.HealthConnectManager
-import com.haruma.health.kit.data.model.MetricType
-import com.haruma.health.kit.data.model.UserGoals
 import com.haruma.health.kit.data.preferences.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,38 +14,21 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class MetricDetailViewModel @Inject constructor(
+class StepDetailViewModel @Inject constructor(
     private val healthConnectManager: HealthConnectManager,
-    private val preferencesRepository: UserPreferencesRepository,
-    savedStateHandle: SavedStateHandle
+    private val preferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MetricDetailUiState())
-    val uiState: StateFlow<MetricDetailUiState> = _uiState.asStateFlow()
-
-    private var currentUserGoals: UserGoals = UserGoals()
+    private val _uiState = MutableStateFlow(StepDetailUiState())
+    val uiState: StateFlow<StepDetailUiState> = _uiState.asStateFlow()
 
     init {
-        val typeArg = savedStateHandle.get<String>("metricType")
-        val parsedType = typeArg?.let { arg ->
-            runCatching { MetricType.valueOf(arg.uppercase()) }.getOrNull()
-        } ?: MetricType.STEPS
-
-        _uiState.update { it.copy(metricType = parsedType) }
-
         viewModelScope.launch {
             preferencesRepository.userGoalsFlow.collect { goals ->
-                currentUserGoals = goals
-                loadDataForDate(_uiState.value.selectedDate)
+                _uiState.update { it.copy(stepsGoal = goals.stepsGoal) }
             }
         }
         checkPermissionsAndLoad()
-    }
-
-    fun setMetricType(metricType: MetricType) {
-        if (_uiState.value.metricType == metricType) return
-        _uiState.update { it.copy(metricType = metricType) }
-        loadDataForDate(_uiState.value.selectedDate)
     }
 
     fun checkPermissionsAndLoad() {
@@ -89,30 +69,20 @@ class MetricDetailViewModel @Inject constructor(
     fun loadDataForDate(date: LocalDate) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            val metricData = healthConnectManager.getHourlyMetricData(
-                date = date,
-                metricType = _uiState.value.metricType,
-                goals = currentUserGoals
-            )
+            val hourlyData = healthConnectManager.getHourlyStepData(date)
             _uiState.update {
                 it.copy(
-                    hourlyData = metricData,
+                    hourlyStepData = hourlyData,
                     isLoading = false
                 )
             }
         }
     }
 
-    fun updateGoal(newGoal: Double) {
+    fun updateStepsGoal(newGoal: Long) {
         viewModelScope.launch {
-            when (_uiState.value.metricType) {
-                MetricType.STEPS -> preferencesRepository.updateStepsGoal(newGoal.toLong())
-                MetricType.CALORIES -> preferencesRepository.updateCaloriesGoal(newGoal)
-                MetricType.WATER -> preferencesRepository.updateWaterGoal(newGoal.toInt())
-                MetricType.SLEEP -> preferencesRepository.updateSleepGoal(newGoal)
-                else -> {}
-            }
-            loadDataForDate(_uiState.value.selectedDate)
+            preferencesRepository.updateStepsGoal(newGoal)
+            _uiState.update { it.copy(stepsGoal = newGoal) }
         }
     }
 

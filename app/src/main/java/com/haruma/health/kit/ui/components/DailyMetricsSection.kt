@@ -28,12 +28,16 @@ import com.haruma.health.kit.ui.theme.RingSteps
 import com.haruma.health.kit.ui.theme.RingWater
 import java.util.Locale
 
+import com.haruma.health.kit.data.model.MetricType
+
 @Composable
 fun DailyMetricsSection(
     healthSummary: DailyHealthSummary,
     userGoals: UserGoals,
     onLogWaterClick: () -> Unit,
     onLogWeightClick: () -> Unit,
+    onStepsClick: (() -> Unit)? = null,
+    onMetricClick: ((MetricType) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -52,7 +56,8 @@ fun DailyMetricsSection(
             unit = stringResource(R.string.unit_steps),
             progress = if (stepsGoal > 0) steps.toFloat() / stepsGoal.toFloat() else null,
             progressColor = RingSteps,
-            subtitle = "Goal: ${String.format(Locale.US, "%,d", stepsGoal)}"
+            subtitle = "Goal: ${String.format(Locale.US, "%,d", stepsGoal)}",
+            onClick = { onMetricClick?.invoke(MetricType.STEPS) ?: onStepsClick?.invoke() }
         )
 
         val calories = healthSummary.caloriesBurned
@@ -65,7 +70,8 @@ fun DailyMetricsSection(
             unit = stringResource(R.string.unit_kcal),
             progress = if (caloriesGoal > 0) (calories / caloriesGoal).toFloat() else null,
             progressColor = RingMove,
-            subtitle = "Goal: ${caloriesGoal.toInt()} ${stringResource(R.string.unit_kcal)}"
+            subtitle = "Goal: ${caloriesGoal.toInt()} ${stringResource(R.string.unit_kcal)}",
+            onClick = { onMetricClick?.invoke(MetricType.CALORIES) }
         )
 
         val water = healthSummary.waterMilliliters
@@ -79,7 +85,7 @@ fun DailyMetricsSection(
             progress = if (waterGoal > 0) water.toFloat() / waterGoal.toFloat() else null,
             progressColor = RingWater,
             subtitle = "Goal: $waterGoal ${stringResource(R.string.unit_ml)}",
-            onClick = onLogWaterClick
+            onClick = { onMetricClick?.invoke(MetricType.WATER) }
         )
 
         val sleepMinutes = healthSummary.sleepDurationMinutes
@@ -98,7 +104,8 @@ fun DailyMetricsSection(
             unit = "",
             progress = (sleepMinutes.toFloat() / (userGoals.sleepGoalHours * 60).toFloat()),
             progressColor = MetricSleep,
-            subtitle = "Goal: ${userGoals.sleepGoalHours.toInt()} ${stringResource(R.string.unit_hours)}"
+            subtitle = "Goal: ${userGoals.sleepGoalHours.toInt()} ${stringResource(R.string.unit_hours)}",
+            onClick = { onMetricClick?.invoke(MetricType.SLEEP) }
         )
 
         val heartRate = healthSummary.latestHeartRateBpm
@@ -108,7 +115,8 @@ fun DailyMetricsSection(
             title = stringResource(R.string.heart_rate),
             value = if (heartRate != null && heartRate > 0) "${heartRate.toInt()}" else stringResource(R.string.no_data),
             unit = if (heartRate != null && heartRate > 0) stringResource(R.string.unit_bpm) else "",
-            subtitle = if (heartRate != null && heartRate > 0) "Latest" else null
+            subtitle = if (heartRate != null && heartRate > 0) "Latest" else null,
+            onClick = { onMetricClick?.invoke(MetricType.HEART_RATE) }
         )
 
         val distanceKm = healthSummary.distanceMeters / 1000.0
@@ -117,7 +125,8 @@ fun DailyMetricsSection(
             iconTint = MetricDistance,
             title = stringResource(R.string.distance),
             value = String.format(Locale.US, "%.2f", distanceKm),
-            unit = stringResource(R.string.unit_km)
+            unit = stringResource(R.string.unit_km),
+            onClick = { onMetricClick?.invoke(MetricType.DISTANCE) }
         )
 
         val weightKg = healthSummary.weightKg
@@ -127,7 +136,7 @@ fun DailyMetricsSection(
             title = stringResource(R.string.weight),
             value = if (weightKg != null && weightKg > 0) String.format(Locale.US, "%.1f", weightKg) else stringResource(R.string.no_data),
             unit = if (weightKg != null && weightKg > 0) stringResource(R.string.unit_kg) else "",
-            onClick = onLogWeightClick
+            onClick = { onMetricClick?.invoke(MetricType.WEIGHT) }
         )
     }
 }
