@@ -29,6 +29,7 @@ import com.haruma.health.kit.ui.trends.TrendsScreen
 fun MainTabScreen(
     onNavigateToStepDetail: () -> Unit,
     onNavigateToMetricDetail: (MetricType) -> Unit,
+    onNavigateToFeedback: (Int) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableStateOf<Screen>(Screen.Dashboard) }
@@ -74,7 +75,9 @@ fun MainTabScreen(
                         onNavigateToMetricDetail = onNavigateToMetricDetail
                     )
                     Screen.Trends -> TrendsScreen()
-                    Screen.Settings -> SettingsScreen()
+                    Screen.Settings -> SettingsScreen(
+                        onNavigateToFeedback = onNavigateToFeedback
+                    )
                     else -> DashboardScreen(
                         onNavigateToStepDetail = onNavigateToStepDetail,
                         onNavigateToMetricDetail = onNavigateToMetricDetail

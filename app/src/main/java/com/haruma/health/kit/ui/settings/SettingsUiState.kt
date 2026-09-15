@@ -20,5 +20,6 @@ data class SettingsUiState(
     val inputGoalValue: String = "",
     val showLanguageDialog: Boolean = false,
     val showThemeDialog: Boolean = false,
-    val showAboutDialog: Boolean = false
+    val showAboutDialog: Boolean = false,
+    val showRateUsDialog: Boolean = false
 )

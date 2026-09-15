@@ -181,6 +181,10 @@ class SettingsViewModel @Inject constructor(
         _uiState.update { it.copy(showAboutDialog = show) }
     }
 
+    fun showRateUsDialog(show: Boolean) {
+        _uiState.update { it.copy(showRateUsDialog = show) }
+    }
+
     fun openHealthConnectSettings(ctx: Context) {
         healthConnectManager.openHealthConnectSettings(ctx)
     }

@@ -18,18 +18,31 @@ import com.haruma.health.kit.ui.components.SettingsActionRow
 import com.haruma.health.kit.ui.components.SettingsGroupCard
 import com.haruma.health.kit.ui.components.SettingsValueRow
 
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.ui.graphics.Color
+
 @Composable
 fun AboutSectionCard(
     appVersion: String,
     onOpenPrivacyPolicy: () -> Unit,
     onOpenTermsOfUse: () -> Unit,
     onShowAboutDialog: () -> Unit,
+    onShowRateUsDialog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     SettingsGroupCard(
         title = stringResource(R.string.settings_section_about),
         modifier = modifier
     ) {
+        SettingsActionRow(
+            icon = Icons.Default.Star,
+            iconTint = Color(0xFFFFB800),
+            title = stringResource(R.string.settings_rate_us),
+            subtitle = stringResource(R.string.settings_rate_us_subtitle),
+            trailingIcon = Icons.Default.ChevronRight,
+            onClick = onShowRateUsDialog
+        )
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
         SettingsActionRow(
             icon = Icons.Default.PrivacyTip,
             iconTint = MaterialTheme.colorScheme.primary,

@@ -110,4 +110,19 @@
     <string name="shortcut_weight_long">Record weight entry</string>
     <string name="shortcut_heart_rate_short">Heart Rate</string>
     <string name="shortcut_heart_rate_long">Check heart rate metrics</string>
+
+    <string name="settings_rate_us">Rate Us</string>
+    <string name="settings_rate_us_subtitle">Share your experience with us</string>
+    <string name="rate_us_dialog_title">Enjoying Health Kit?</string>
+    <string name="rate_us_dialog_desc">Tap a star to rate it or leave us your valuable feedback.</string>
+    <string name="rate_us_submit">Submit Rating</string>
+    <string name="rate_us_rating_hint">Select 1 to 5 stars</string>
+    <string name="feedback_title">Send Feedback</string>
+    <string name="feedback_subtitle">We appreciate your feedback! Let us know how we can make Health Kit better for you.</string>
+    <string name="feedback_rating_label">Your rating: %1$d / 5 stars</string>
+    <string name="feedback_label">Your Feedback</string>
+    <string name="feedback_hint">Write your thoughts or issues here...</string>
+    <string name="feedback_submit">Submit Feedback</string>
+    <string name="feedback_submitted_toast">Thank you! Your feedback has been sent.</string>
+    <string name="feedback_empty_error">Please enter your feedback before submitting.</string>
 </resources>

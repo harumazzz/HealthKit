@@ -35,8 +35,11 @@ import com.haruma.health.kit.ui.settings.dialogs.EditGoalAlertDialog
 import com.haruma.health.kit.ui.settings.dialogs.LanguageSelectionDialog
 import com.haruma.health.kit.ui.settings.dialogs.ThemeSelectionDialog
 
+import com.haruma.health.kit.ui.settings.dialogs.RateUsDialog
+
 @Composable
 fun SettingsScreen(
+    onNavigateToFeedback: (Int) -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
@@ -101,7 +104,8 @@ fun SettingsScreen(
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(termsOfUseUrl))
                 context.startActivity(intent)
             },
-            onShowAboutDialog = { viewModel.showAboutDialog(true) }
+            onShowAboutDialog = { viewModel.showAboutDialog(true) },
+            onShowRateUsDialog = { viewModel.showRateUsDialog(true) }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -137,6 +141,29 @@ fun SettingsScreen(
         AboutAppAlertDialog(
             appVersion = uiState.appVersion,
             onDismiss = { viewModel.showAboutDialog(false) }
+        )
+    }
+
+    if (uiState.showRateUsDialog) {
+        RateUsDialog(
+            onRatingSubmitted = { rating ->
+                viewModel.showRateUsDialog(false)
+                if (rating <= 3) {
+                    onNavigateToFeedback(rating)
+                } else {
+                    val packageName = context.packageName
+                    val playStoreIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    try {
+                        context.startActivity(playStoreIntent)
+                    } catch (_: Exception) {
+                        val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName"))
+                        context.startActivity(webIntent)
+                    }
+                }
+            },
+            onDismiss = { viewModel.showRateUsDialog(false) }
         )
     }
 }

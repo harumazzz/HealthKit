@@ -13,6 +13,10 @@ import com.haruma.health.kit.ui.stepdetail.StepDetailScreen
 
 import androidx.compose.runtime.LaunchedEffect
 
+import com.haruma.health.kit.ui.feedback.FeedbackScreen
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+
 @Composable
 fun HealthNavHost(
     navController: NavHostController,
@@ -66,6 +70,9 @@ fun HealthNavHost(
                 },
                 onNavigateToMetricDetail = { metricType ->
                     navController.navigate("detail/${metricType.name.lowercase()}")
+                },
+                onNavigateToFeedback = { rating ->
+                    navController.navigate(Screen.feedbackRoute(rating))
                 }
             )
         }
@@ -78,6 +85,23 @@ fun HealthNavHost(
         }
         composable("detail/{metricType}") {
             MetricDetailScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(
+            route = "feedback?rating={rating}",
+            arguments = listOf(
+                navArgument("rating") {
+                    type = NavType.IntType
+                    defaultValue = 0
+                }
+            )
+        ) { backStackEntry ->
+            val rating = backStackEntry.arguments?.getInt("rating") ?: 0
+            FeedbackScreen(
+                initialRating = rating,
                 onBackClick = {
                     navController.popBackStack()
                 }
