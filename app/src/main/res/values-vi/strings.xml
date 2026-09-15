@@ -94,4 +94,24 @@
     <string name="widget_description">Tóm tắt hoạt động sức khỏe hàng ngày với vòng tiến trình, bước chân, calo và thời gian.</string>
     <string name="subtitle_goal_format">Mục tiêu: %1$s</string>
     <string name="latest">Mới nhất</string>
+
+    <string name="settings_rate_us">Đánh giá ứng dụng</string>
+    <string name="settings_rate_us_subtitle">Chia sẻ trải nghiệm của bạn với chúng tôi</string>
+    <string name="rate_us_dialog_title">Bạn yêu thích Health Kit?</string>
+    <string name="rate_us_dialog_desc">Chạm vào ngôi sao để đánh giá hoặc gửi ý kiến đóng góp cho chúng tôi.</string>
+    <string name="rate_us_submit">Gửi đánh giá</string>
+    <string name="rate_us_rating_hint">Chọn từ 1 đến 5 sao</string>
+    <string name="rate_us_hint_1">Rất tiếc vì trải nghiệm chưa tốt. Hãy cho chúng tôi biết cách cải thiện nhé.</string>
+    <string name="rate_us_hint_2">Chúng tôi đang nỗ lực nâng cao trải nghiệm ứng dụng.</string>
+    <string name="rate_us_hint_3">Cảm ơn bạn đã đánh giá!</string>
+    <string name="rate_us_hint_4">Rất vui vì bạn yêu thích sử dụng Health Kit!</string>
+    <string name="rate_us_hint_5">Cảm ơn sự ủng hộ tuyệt vời của bạn!</string>
+    <string name="feedback_title">Gửi phản hồi</string>
+    <string name="feedback_subtitle">Chúng tôi rất trân trọng ý kiến của bạn! Hãy cho chúng tôi biết cách làm cho Health Kit tốt hơn.</string>
+    <string name="feedback_rating_label">Đánh giá của bạn: %1$d / 5 sao</string>
+    <string name="feedback_label">Ý kiến đóng góp</string>
+    <string name="feedback_hint">Viết suy nghĩ hoặc vấn đề bạn gặp phải tại đây...</string>
+    <string name="feedback_submit">Gửi phản hồi</string>
+    <string name="feedback_submitted_toast">Cảm ơn bạn! Phản hồi đã được gửi thành công.</string>
+    <string name="feedback_empty_error">Vui lòng nhập nội dung phản hồi trước khi gửi.</string>
 </resources>

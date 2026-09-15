@@ -1,6 +1,5 @@
 package com.haruma.health.kit.ui.feedback
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +29,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -38,18 +40,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.haruma.health.kit.R
+import com.haruma.health.kit.ui.components.HealthKitSnackbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,7 +67,8 @@ fun FeedbackScreen(
     var errorMessage by remember { mutableStateOf<String?>(null) }
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     val emptyErrorText = stringResource(R.string.feedback_empty_error)
     val successToastText = stringResource(R.string.feedback_submitted_toast)
@@ -75,6 +81,11 @@ fun FeedbackScreen(
                     focusManager.clearFocus()
                 })
             },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { snackbarData ->
+                HealthKitSnackbar(snackbarData = snackbarData)
+            }
+        },
         topBar = {
             TopAppBar(
                 title = {
@@ -204,8 +215,14 @@ fun FeedbackScreen(
                     } else {
                         focusManager.clearFocus()
                         keyboardController?.hide()
-                        Toast.makeText(context, successToastText, Toast.LENGTH_SHORT).show()
-                        onBackClick()
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = successToastText,
+                                duration = SnackbarDuration.Short
+                            )
+                            delay(1000)
+                            onBackClick()
+                        }
                     }
                 },
                 modifier = Modifier

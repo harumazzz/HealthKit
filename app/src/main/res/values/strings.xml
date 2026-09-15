@@ -125,4 +125,9 @@
     <string name="feedback_submit">Submit Feedback</string>
     <string name="feedback_submitted_toast">Thank you! Your feedback has been sent.</string>
     <string name="feedback_empty_error">Please enter your feedback before submitting.</string>
+    <string name="rate_us_hint_1">We\'re sorry to hear that. Please let us know how we can improve.</string>
+    <string name="rate_us_hint_2">We\'re working hard to improve your experience.</string>
+    <string name="rate_us_hint_3">Thank you for your rating!</string>
+    <string name="rate_us_hint_4">Great to know you enjoy using Health Kit!</string>
+    <string name="rate_us_hint_5">Thank you so much for your support!</string>
 </resources>
