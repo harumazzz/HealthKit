@@ -8,4 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="ic_launcher_background">#FFFFFF</color>
+
+    <color name="widget_preview_bg">#FFFFFF</color>
+    <color name="widget_preview_text">#1C1C1E</color>
+    <color name="widget_preview_ring_track">#E8F5E9</color>
+    <color name="widget_preview_ring_progress">#2E7D32</color>
 </resources>

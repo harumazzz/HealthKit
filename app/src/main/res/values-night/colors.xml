@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="widget_preview_bg">#141414</color>
+    <color name="widget_preview_text">#FFFFFF</color>
+    <color name="widget_preview_ring_track">#1B382B</color>
+    <color name="widget_preview_ring_progress">#4CAF50</color>
+</resources>
