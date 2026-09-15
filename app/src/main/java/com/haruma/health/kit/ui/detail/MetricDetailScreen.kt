@@ -1,35 +1,159 @@
 package com.haruma.health.kit.ui.detail
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.haruma.health.kit.R
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.haruma.health.kit.data.health.HealthConnectManager
+import com.haruma.health.kit.data.health.HealthPermissions
+import com.haruma.health.kit.ui.components.HealthConnectUnavailableCard
+import com.haruma.health.kit.ui.components.HealthPermissionCard
+import com.haruma.health.kit.ui.components.MetricChartCard
+import com.haruma.health.kit.ui.components.MetricSelectorSection
+import com.haruma.health.kit.ui.components.MetricSummaryCards
+import com.haruma.health.kit.ui.theme.MetricHeartRate
+import com.haruma.health.kit.ui.theme.MetricSleep
+import com.haruma.health.kit.ui.theme.RingMove
+import com.haruma.health.kit.ui.theme.RingSteps
 
 @Composable
-fun MetricDetailScreen(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+fun MetricDetailScreen(
+    modifier: Modifier = Modifier,
+    viewModel: MetricDetailViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = HealthConnectManager(context).createRequestPermissionResultContract()
     ) {
-        Text(
-            text = stringResource(R.string.nav_detail),
-            style = MaterialTheme.typography.headlineMedium
+        viewModel.checkPermissionsAndLoad()
+    }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.checkPermissionsAndLoad()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    val activeColor = when (uiState.selectedMetric) {
+        DetailMetric.STEPS -> RingSteps
+        DetailMetric.CALORIES -> RingMove
+        DetailMetric.SLEEP -> MetricSleep
+        DetailMetric.HEART_RATE -> MetricHeartRate
+    }
+
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        val contentAlpha by animateFloatAsState(
+            targetValue = if (uiState.isLoading) 0.72f else 1f,
+            animationSpec = tween(durationMillis = 200),
+            label = "detailContentAlpha"
         )
-        Text(
-            text = stringResource(R.string.ready_for_phase_3),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer { alpha = contentAlpha },
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                MetricSelectorSection(
+                    timeRange = uiState.timeRange,
+                    selectedMetric = uiState.selectedMetric,
+                    onTimeRangeSelected = viewModel::selectTimeRange,
+                    onMetricSelected = viewModel::selectMetric
+                )
+            }
+
+            if (!uiState.isHealthConnectAvailable) {
+                item {
+                    HealthConnectUnavailableCard(
+                        onInstallClick = {
+                            HealthConnectManager(context).openInstallHealthConnect(context)
+                        }
+                    )
+                }
+            } else if (!uiState.hasPermissions) {
+                item {
+                    HealthPermissionCard(
+                        onOpenSettingsClick = {
+                            HealthConnectManager(context).openHealthConnectSettings(context)
+                        },
+                        onGrantPermissionsClick = {
+                            permissionLauncher.launch(HealthPermissions.PERMISSIONS)
+                        }
+                    )
+                }
+            }
+
+            item {
+                MetricSummaryCards(
+                    stats = uiState.summaryStats,
+                    selectedMetric = uiState.selectedMetric,
+                    accentColor = activeColor
+                )
+            }
+
+            item {
+                MetricChartCard(
+                    selectedMetric = uiState.selectedMetric,
+                    chartBars = uiState.chartBars,
+                    selectedBarIndex = uiState.selectedBarIndex,
+                    onBarSelected = viewModel::selectBar,
+                    goalValue = uiState.summaryStats.goalValue,
+                    formattedGoalValue = uiState.summaryStats.formattedGoalValue,
+                    accentColor = activeColor
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = uiState.isLoading,
+            enter = fadeIn(animationSpec = tween(150)),
+            exit = fadeOut(animationSpec = tween(250)),
+            modifier = Modifier.align(Alignment.TopCenter)
+        ) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp),
+                color = activeColor,
+                trackColor = Color.Transparent
+            )
+        }
     }
 }

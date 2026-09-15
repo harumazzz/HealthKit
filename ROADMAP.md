@@ -86,12 +86,12 @@ app/src/main/java/com/haruma/health/kit/
 
 ---
 
-### Giai đoạn 3: Metric Detail & Historical Charts
-- [ ] Bộ lọc khung thời gian: **Past 7 Days (Week)** hoặc **Past 30 Days (Month)**.
-- [ ] Bộ chọn chỉ số: Steps, Calories Burned, Sleep, Heart Rate.
-- [ ] `SimpleBarChart`: Biểu đồ cột tự vẽ bằng Canvas Compose, hiển thị vạch mục tiêu (Goal Line), highlight ngày cao nhất, hỗ trợ chạm vào cột để xem số liệu chi tiết.
-- [ ] Thẻ tóm tắt thống kê: Mức trung bình hàng ngày (Daily Average), ngày cao nhất (Peak Day), tổng tích lũy trong chu kỳ.
-- [ ] `MetricDetailViewModel`: Query aggregate theo khoảng ngày (`aggregateGroupByPeriod`) từ Health Connect.
+### Giai đoạn 3: Metric Detail & Historical Charts (ĐÃ HOÀN THÀNH)
+- [x] Bộ lọc khung thời gian: **Past 7 Days (Week)** hoặc **Past 30 Days (Month)**.
+- [x] Bộ chọn chỉ số: Steps, Calories Burned, Sleep, Heart Rate.
+- [x] `SimpleBarChart`: Biểu đồ cột tự vẽ bằng Canvas Compose, hiển thị vạch mục tiêu (Goal Line), highlight ngày cao nhất, hỗ trợ chạm vào cột để xem số liệu chi tiết.
+- [x] Thẻ tóm tắt thống kê: Mức trung bình hàng ngày (Daily Average), ngày cao nhất (Peak Day), tổng tích lũy trong chu kỳ.
+- [x] `MetricDetailViewModel`: Query aggregate theo khoảng ngày (`aggregateGroupByPeriod`) từ Health Connect.
 
 ---
 

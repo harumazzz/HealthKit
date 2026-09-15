@@ -22,7 +22,7 @@ fun HealthNavHost(
         composable(Screen.Dashboard.route) {
             DashboardScreen()
         }
-        composable(Screen.Detail.route) {
+        composable(Screen.Trends.route) {
             MetricDetailScreen()
         }
         composable(Screen.Settings.route) {

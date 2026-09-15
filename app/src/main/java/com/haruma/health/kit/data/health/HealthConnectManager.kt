@@ -15,6 +15,7 @@ import androidx.health.connect.client.records.HydrationRecord
 import androidx.health.connect.client.records.SleepSessionRecord
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.records.WeightRecord
+import androidx.health.connect.client.request.AggregateGroupByPeriodRequest
 import androidx.health.connect.client.request.AggregateRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
@@ -25,6 +26,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
+import java.time.Period
 import java.time.ZoneId
 import java.time.ZoneOffset
 import javax.inject.Inject
@@ -131,6 +133,66 @@ class HealthConnectManager @Inject constructor(
         } catch (_: Exception) {
             DailyHealthSummary(date = date)
         }
+    }
+
+    suspend fun getHistoricalDailySummaries(startDate: LocalDate, endDate: LocalDate): List<DailyHealthSummary> {
+        val client = healthConnectClient ?: return emptyList()
+        val startDateTime = startDate.atStartOfDay()
+        val endDateTime = endDate.plusDays(1).atStartOfDay()
+        val timeRange = TimeRangeFilter.between(startDateTime, endDateTime)
+
+        val resultMap = mutableMapOf<LocalDate, DailyHealthSummary>()
+        var dateIterator = startDate
+        while (!dateIterator.isAfter(endDate)) {
+            resultMap[dateIterator] = DailyHealthSummary(date = dateIterator)
+            dateIterator = dateIterator.plusDays(1)
+        }
+
+        try {
+            val response = client.aggregateGroupByPeriod(
+                AggregateGroupByPeriodRequest(
+                    metrics = setOf(
+                        StepsRecord.COUNT_TOTAL,
+                        ActiveCaloriesBurnedRecord.ACTIVE_CALORIES_TOTAL,
+                        DistanceRecord.DISTANCE_TOTAL,
+                        HydrationRecord.VOLUME_TOTAL,
+                        SleepSessionRecord.SLEEP_DURATION_TOTAL,
+                        HeartRateRecord.BPM_AVG
+                    ),
+                    timeRangeFilter = timeRange,
+                    timeRangeSlicer = Period.ofDays(1)
+                )
+            )
+
+            for (group in response) {
+                val groupDate = group.startTime.toLocalDate()
+                val steps = group.result[StepsRecord.COUNT_TOTAL] ?: 0L
+                val calories = group.result[ActiveCaloriesBurnedRecord.ACTIVE_CALORIES_TOTAL]?.inKilocalories ?: 0.0
+                val distance = group.result[DistanceRecord.DISTANCE_TOTAL]?.inMeters ?: 0.0
+                val water = group.result[HydrationRecord.VOLUME_TOTAL]?.inMilliliters?.toInt() ?: 0
+                val sleepDuration = group.result[SleepSessionRecord.SLEEP_DURATION_TOTAL]?.toMinutes() ?: 0L
+                val heartRateAvg = group.result[HeartRateRecord.BPM_AVG]?.toDouble()
+
+                resultMap[groupDate] = DailyHealthSummary(
+                    date = groupDate,
+                    steps = steps,
+                    caloriesBurned = calories,
+                    distanceMeters = distance,
+                    latestHeartRateBpm = heartRateAvg,
+                    sleepDurationMinutes = sleepDuration,
+                    waterMilliliters = water
+                )
+            }
+        } catch (_: Exception) {
+            var fallbackDate = startDate
+            while (!fallbackDate.isAfter(endDate)) {
+                val daily = getDailyHealthSummary(fallbackDate)
+                resultMap[fallbackDate] = daily
+                fallbackDate = fallbackDate.plusDays(1)
+            }
+        }
+
+        return resultMap.values.sortedBy { it.date }
     }
 
     suspend fun writeWater(milliliters: Double): Boolean {

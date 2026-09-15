@@ -1,10 +1,17 @@
 package com.haruma.health.kit.ui.dashboard
 
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -18,7 +25,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -87,62 +97,83 @@ fun DashboardScreen(
             }
         }
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            DateSelectorBar(
-                selectedDate = uiState.selectedDate,
-                onDateSelected = viewModel::selectDate
+            val contentAlpha by animateFloatAsState(
+                targetValue = if (uiState.isLoading) 0.72f else 1f,
+                animationSpec = tween(durationMillis = 200),
+                label = "dashboardContentAlpha"
             )
 
-            if (uiState.isLoading) {
-                LinearProgressIndicator(
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = 88.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = contentAlpha }
             ) {
-                if (!uiState.isHealthConnectAvailable) {
-                    item {
-                        HealthConnectUnavailableCard(
-                            onInstallClick = { viewModel.openInstall(context) }
-                        )
-                    }
-                } else if (!uiState.hasPermissions) {
-                    item {
-                        HealthPermissionCard(
-                            onOpenSettingsClick = { viewModel.openSettings(context) },
-                            onGrantPermissionsClick = {
-                                permissionLauncher.launch(HealthPermissions.PERMISSIONS)
-                            }
-                        )
-                    }
-                } else {
-                    item {
-                        ActivityRings(
-                            calories = uiState.healthSummary.caloriesBurned,
-                            caloriesGoal = uiState.userGoals.caloriesGoal,
-                            steps = uiState.healthSummary.steps,
-                            stepsGoal = uiState.userGoals.stepsGoal,
-                            water = uiState.healthSummary.waterMilliliters,
-                            waterGoal = uiState.userGoals.waterGoalMilliliters
-                        )
-                    }
+                DateSelectorBar(
+                    selectedDate = uiState.selectedDate,
+                    onDateSelected = viewModel::selectDate
+                )
 
-                    item {
-                        DailyMetricsSection(
-                            healthSummary = uiState.healthSummary,
-                            userGoals = uiState.userGoals,
-                            onLogWaterClick = { viewModel.setQuickLogSheetVisible(true) },
-                            onLogWeightClick = { viewModel.setQuickLogSheetVisible(true) }
-                        )
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = 88.dp)
+                ) {
+                    if (!uiState.isHealthConnectAvailable) {
+                        item {
+                            HealthConnectUnavailableCard(
+                                onInstallClick = { viewModel.openInstall(context) }
+                            )
+                        }
+                    } else if (!uiState.hasPermissions) {
+                        item {
+                            HealthPermissionCard(
+                                onOpenSettingsClick = { viewModel.openSettings(context) },
+                                onGrantPermissionsClick = {
+                                    permissionLauncher.launch(HealthPermissions.PERMISSIONS)
+                                }
+                            )
+                        }
+                    } else {
+                        item {
+                            ActivityRings(
+                                calories = uiState.healthSummary.caloriesBurned,
+                                caloriesGoal = uiState.userGoals.caloriesGoal,
+                                steps = uiState.healthSummary.steps,
+                                stepsGoal = uiState.userGoals.stepsGoal,
+                                water = uiState.healthSummary.waterMilliliters,
+                                waterGoal = uiState.userGoals.waterGoalMilliliters
+                            )
+                        }
+
+                        item {
+                            DailyMetricsSection(
+                                healthSummary = uiState.healthSummary,
+                                userGoals = uiState.userGoals,
+                                onLogWaterClick = { viewModel.setQuickLogSheetVisible(true) },
+                                onLogWeightClick = { viewModel.setQuickLogSheetVisible(true) }
+                            )
+                        }
                     }
                 }
+            }
+
+            AnimatedVisibility(
+                visible = uiState.isLoading,
+                enter = fadeIn(animationSpec = tween(150)),
+                exit = fadeOut(animationSpec = tween(250)),
+                modifier = Modifier.align(Alignment.TopCenter)
+            ) {
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(2.dp),
+                    color = MaterialTheme.colorScheme.primary,
+                    trackColor = Color.Transparent
+                )
             }
         }
 
