@@ -2,6 +2,7 @@ package com.haruma.health.kit.ui.settings
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.Edit
@@ -71,6 +73,10 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.haruma.health.kit.R
 import com.haruma.health.kit.ui.components.HealthKitTextField
+import com.haruma.health.kit.ui.theme.MetricSleep
+import com.haruma.health.kit.ui.theme.RingMove
+import com.haruma.health.kit.ui.theme.RingSteps
+import com.haruma.health.kit.ui.theme.RingWater
 
 @Composable
 fun SettingsScreen(
@@ -114,7 +120,7 @@ fun SettingsScreen(
         SettingsGroupCard(title = stringResource(R.string.settings_section_daily_goals)) {
             GoalItemRow(
                 icon = Icons.Default.DirectionsWalk,
-                iconTint = Color(0xFF00E676),
+                iconTint = RingSteps,
                 title = stringResource(R.string.settings_steps_goal),
                 value = "${uiState.userGoals.stepsGoal} ${stringResource(R.string.unit_steps)}",
                 onClick = { viewModel.openGoalEditor(GoalType.STEPS) }
@@ -122,7 +128,7 @@ fun SettingsScreen(
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
             GoalItemRow(
                 icon = Icons.Default.LocalFireDepartment,
-                iconTint = Color(0xFFFF5252),
+                iconTint = RingMove,
                 title = stringResource(R.string.settings_calories_goal),
                 value = "${uiState.userGoals.caloriesGoal.toInt()} ${stringResource(R.string.unit_kcal)}",
                 onClick = { viewModel.openGoalEditor(GoalType.CALORIES) }
@@ -130,7 +136,7 @@ fun SettingsScreen(
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
             GoalItemRow(
                 icon = Icons.Default.WaterDrop,
-                iconTint = Color(0xFF00B0FF),
+                iconTint = RingWater,
                 title = stringResource(R.string.settings_water_goal),
                 value = "${uiState.userGoals.waterGoalMilliliters} ${stringResource(R.string.unit_ml)}",
                 onClick = { viewModel.openGoalEditor(GoalType.WATER) }
@@ -138,7 +144,7 @@ fun SettingsScreen(
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
             GoalItemRow(
                 icon = Icons.Default.Bedtime,
-                iconTint = Color(0xFF7C4DFF),
+                iconTint = MetricSleep,
                 title = stringResource(R.string.settings_sleep_goal),
                 value = "${uiState.userGoals.sleepGoalHours} ${stringResource(R.string.unit_hours)}",
                 onClick = { viewModel.openGoalEditor(GoalType.SLEEP) }
@@ -146,6 +152,23 @@ fun SettingsScreen(
         }
 
         SettingsGroupCard(title = stringResource(R.string.settings_section_general)) {
+            val themeDisplay = when (uiState.selectedTheme) {
+                "light" -> stringResource(R.string.settings_theme_light)
+                "dark" -> stringResource(R.string.settings_theme_dark)
+                else -> stringResource(R.string.settings_theme_system)
+            }
+
+            SettingsActionRow(
+                icon = Icons.Default.DarkMode,
+                iconTint = MaterialTheme.colorScheme.primary,
+                title = stringResource(R.string.settings_theme),
+                subtitle = themeDisplay,
+                trailingIcon = Icons.Default.ChevronRight,
+                onClick = { viewModel.showThemeDialog(true) }
+            )
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+
             val languageDisplay = if (uiState.selectedLanguage == "vi") {
                 stringResource(R.string.settings_language_vi)
             } else {
@@ -462,6 +485,81 @@ fun SettingsScreen(
         )
     }
 
+    if (uiState.showThemeDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.showThemeDialog(false) },
+            title = {
+                Text(
+                    text = stringResource(R.string.settings_theme),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Column {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { viewModel.setTheme("system") }
+                            .padding(vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = uiState.selectedTheme == "system",
+                            onClick = { viewModel.setTheme("system") }
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = stringResource(R.string.settings_theme_system),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { viewModel.setTheme("light") }
+                            .padding(vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = uiState.selectedTheme == "light",
+                            onClick = { viewModel.setTheme("light") }
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = stringResource(R.string.settings_theme_light),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { viewModel.setTheme("dark") }
+                            .padding(vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = uiState.selectedTheme == "dark",
+                            onClick = { viewModel.setTheme("dark") }
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = stringResource(R.string.settings_theme_dark),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { viewModel.showThemeDialog(false) }) {
+                    Text(stringResource(R.string.settings_close))
+                }
+            }
+        )
+    }
+
     if (uiState.showAboutDialog) {
         AlertDialog(
             onDismissRequest = { viewModel.showAboutDialog(false) },
@@ -544,7 +642,8 @@ private fun SettingsGroupCard(
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface
             ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f))
         ) {
             Column {
                 content()

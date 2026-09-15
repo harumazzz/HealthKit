@@ -75,6 +75,10 @@
     <string name="settings_language">Language</string>
     <string name="settings_language_en">English</string>
     <string name="settings_language_vi">Tiếng Việt</string>
+    <string name="settings_theme">Appearance</string>
+    <string name="settings_theme_system">System Default</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
     <string name="settings_section_health_connect">Health Connect</string>
     <string name="settings_hc_status_active">Permissions Granted</string>
     <string name="settings_hc_status_needs_perms">Permissions Required</string>

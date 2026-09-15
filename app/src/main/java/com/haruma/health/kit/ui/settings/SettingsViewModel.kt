@@ -62,6 +62,12 @@ class SettingsViewModel @Inject constructor(
                 _uiState.update { it.copy(selectedLanguage = lang) }
             }
         }
+
+        viewModelScope.launch {
+            preferencesRepository.themeModeFlow.collect { theme ->
+                _uiState.update { it.copy(selectedTheme = theme) }
+            }
+        }
     }
 
     fun checkHealthConnectStatus() {
@@ -151,8 +157,24 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun setTheme(theme: String) {
+        viewModelScope.launch {
+            preferencesRepository.updateThemeMode(theme)
+            _uiState.update {
+                it.copy(
+                    selectedTheme = theme,
+                    showThemeDialog = false
+                )
+            }
+        }
+    }
+
     fun showLanguageDialog(show: Boolean) {
         _uiState.update { it.copy(showLanguageDialog = show) }
+    }
+
+    fun showThemeDialog(show: Boolean) {
+        _uiState.update { it.copy(showThemeDialog = show) }
     }
 
     fun showAboutDialog(show: Boolean) {

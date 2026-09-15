@@ -41,7 +41,7 @@ fun <T> SegmentedTabBar(
     itemLabel: (T) -> String,
     modifier: Modifier = Modifier,
     height: Dp = 42.dp,
-    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     selectedPillColor: Color = MaterialTheme.colorScheme.surface,
     selectedTextColor: Color = MaterialTheme.colorScheme.onSurface,
     unselectedTextColor: Color = MaterialTheme.colorScheme.onSurfaceVariant

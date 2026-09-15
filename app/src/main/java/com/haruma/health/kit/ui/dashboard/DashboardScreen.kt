@@ -82,6 +82,7 @@ fun DashboardScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             if (uiState.hasPermissions) {
                 FloatingActionButton(

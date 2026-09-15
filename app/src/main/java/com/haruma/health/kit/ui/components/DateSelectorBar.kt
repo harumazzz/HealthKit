@@ -1,7 +1,9 @@
 package com.haruma.health.kit.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -76,8 +78,13 @@ fun DateSelectorBar(
             FilledTonalIconButton(
                 onClick = { onDateSelected(selectedDate.minusDays(1)) },
                 colors = IconButtonDefaults.filledTonalIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                    containerColor = MaterialTheme.colorScheme.surface,
                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                ),
+                modifier = Modifier.border(
+                    1.dp,
+                    MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f),
+                    CircleShape
                 )
             ) {
                 Icon(
@@ -89,7 +96,12 @@ fun DateSelectorBar(
             Row(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f))
+                    .background(MaterialTheme.colorScheme.surface)
+                    .border(
+                        1.dp,
+                        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f),
+                        MaterialTheme.shapes.medium
+                    )
                     .clickable { showDatePicker = true }
                     .padding(horizontal = 16.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -113,10 +125,15 @@ fun DateSelectorBar(
                 onClick = { onDateSelected(selectedDate.plusDays(1)) },
                 enabled = !isToday,
                 colors = IconButtonDefaults.filledTonalIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                    containerColor = MaterialTheme.colorScheme.surface,
                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f),
+                    disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f),
                     disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                ),
+                modifier = Modifier.border(
+                    1.dp,
+                    MaterialTheme.colorScheme.outlineVariant.copy(alpha = if (!isToday) 0.7f else 0.3f),
+                    CircleShape
                 )
             ) {
                 Icon(

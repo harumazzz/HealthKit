@@ -24,6 +24,7 @@ class UserPreferencesRepository @Inject constructor(
     private val keyWaterGoal = intPreferencesKey("water_goal")
     private val keySleepGoal = doublePreferencesKey("sleep_goal")
     private val keyLanguage = androidx.datastore.preferences.core.stringPreferencesKey("app_language")
+    private val keyThemeMode = androidx.datastore.preferences.core.stringPreferencesKey("theme_mode")
 
     val userGoalsFlow: Flow<UserGoals> = context.dataStore.data.map { preferences ->
         UserGoals(
@@ -36,6 +37,10 @@ class UserPreferencesRepository @Inject constructor(
 
     val languageFlow: Flow<String> = context.dataStore.data.map { preferences ->
         preferences[keyLanguage] ?: "en"
+    }
+
+    val themeModeFlow: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[keyThemeMode] ?: "system"
     }
 
     suspend fun updateStepsGoal(steps: Long) {
@@ -65,6 +70,12 @@ class UserPreferencesRepository @Inject constructor(
     suspend fun updateLanguage(languageCode: String) {
         context.dataStore.edit { preferences ->
             preferences[keyLanguage] = languageCode
+        }
+    }
+
+    suspend fun updateThemeMode(themeMode: String) {
+        context.dataStore.edit { preferences ->
+            preferences[keyThemeMode] = themeMode
         }
     }
 }

@@ -75,6 +75,10 @@
     <string name="settings_language">Ngôn ngữ</string>
     <string name="settings_language_en">English</string>
     <string name="settings_language_vi">Tiếng Việt</string>
+    <string name="settings_theme">Chế độ giao diện</string>
+    <string name="settings_theme_system">Theo hệ thống</string>
+    <string name="settings_theme_light">Sáng</string>
+    <string name="settings_theme_dark">Tối</string>
     <string name="settings_section_health_connect">Health Connect</string>
     <string name="settings_hc_status_active">Đã cấp quyền</string>
     <string name="settings_hc_status_needs_perms">Cần cấp quyền</string>

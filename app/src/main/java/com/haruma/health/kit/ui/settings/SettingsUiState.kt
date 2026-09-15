@@ -12,11 +12,13 @@ enum class GoalType {
 data class SettingsUiState(
     val userGoals: UserGoals = UserGoals(),
     val selectedLanguage: String = "en",
+    val selectedTheme: String = "system",
     val isHealthConnectAvailable: Boolean = true,
     val hasAllPermissions: Boolean = false,
     val appVersion: String = "1.0",
     val activeEditGoalType: GoalType? = null,
     val inputGoalValue: String = "",
     val showLanguageDialog: Boolean = false,
+    val showThemeDialog: Boolean = false,
     val showAboutDialog: Boolean = false
 )
