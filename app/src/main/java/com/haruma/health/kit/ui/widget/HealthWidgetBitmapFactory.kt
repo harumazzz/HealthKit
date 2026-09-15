@@ -8,10 +8,10 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
+import android.os.Build
 import androidx.core.content.ContextCompat
 import com.haruma.health.kit.R
-
-import android.graphics.drawable.Drawable
 
 object HealthWidgetBitmapFactory {
 
@@ -31,8 +31,10 @@ object HealthWidgetBitmapFactory {
         val isDark = uiMode == Configuration.UI_MODE_NIGHT_YES
 
         val bgColor = if (isDark) Color.parseColor("#141414") else Color.parseColor("#FFFFFF")
-        val trackColor = if (isDark) Color.parseColor("#2E1C16") else Color.parseColor("#F5E6DF")
+        val trackColor = resolveTrackColor(context, isDark)
         val textColor = if (isDark) Color.WHITE else Color.parseColor("#1C1C1E")
+        val progressColor = resolveProgressColor(context, isDark)
+        val overflowColor = resolveOverflowColor(context, isDark)
 
         val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = bgColor
@@ -68,7 +70,7 @@ object HealthWidgetBitmapFactory {
         if (rawProgress > 0f) {
             val baseSweep = (rawProgress * 360f).coerceAtMost(360f)
             val activePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = Color.parseColor("#FF5E00")
+                color = progressColor
                 style = Paint.Style.STROKE
                 this.strokeWidth = strokeWidth
                 strokeCap = Paint.Cap.ROUND
@@ -78,7 +80,7 @@ object HealthWidgetBitmapFactory {
             if (rawProgress > 1f) {
                 val overflowSweep = ((rawProgress - 1f) * 360f).coerceAtMost(360f)
                 val overflowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.parseColor("#FFB300")
+                    color = overflowColor
                     style = Paint.Style.STROKE
                     this.strokeWidth = strokeWidth
                     strokeCap = Paint.Cap.ROUND
@@ -87,7 +89,7 @@ object HealthWidgetBitmapFactory {
             }
         } else {
             val startDotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = Color.parseColor("#FF5E00")
+                color = progressColor
                 style = Paint.Style.FILL
             }
             val dotRadius = strokeWidth / 2f
@@ -146,6 +148,54 @@ object HealthWidgetBitmapFactory {
         )
 
         return bitmap
+    }
+
+    private fun resolveProgressColor(context: Context, isDark: Boolean): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val resId = if (isDark) {
+                android.R.color.system_accent1_300
+            } else {
+                android.R.color.system_accent1_600
+            }
+            try {
+                val color = ContextCompat.getColor(context, resId)
+                if (color != 0) return color
+            } catch (_: Exception) {
+            }
+        }
+        return if (isDark) Color.parseColor("#4CAF50") else Color.parseColor("#2E7D32")
+    }
+
+    private fun resolveOverflowColor(context: Context, isDark: Boolean): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val resId = if (isDark) {
+                android.R.color.system_accent1_100
+            } else {
+                android.R.color.system_accent1_800
+            }
+            try {
+                val color = ContextCompat.getColor(context, resId)
+                if (color != 0) return color
+            } catch (_: Exception) {
+            }
+        }
+        return if (isDark) Color.parseColor("#81C784") else Color.parseColor("#1B5E20")
+    }
+
+    private fun resolveTrackColor(context: Context, isDark: Boolean): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val resId = if (isDark) {
+                android.R.color.system_accent1_900
+            } else {
+                android.R.color.system_accent1_100
+            }
+            try {
+                val color = ContextCompat.getColor(context, resId)
+                if (color != 0) return color
+            } catch (_: Exception) {
+            }
+        }
+        return if (isDark) Color.parseColor("#1B382B") else Color.parseColor("#E8F5E9")
     }
 
     private fun drawMetricRow(

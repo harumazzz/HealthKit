@@ -14,15 +14,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.DirectionsWalk
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Bedtime
-import androidx.compose.material.icons.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.TrackChanges
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -72,7 +71,7 @@ fun SubMetricsGridCard(
                     SubMetricIconType.HEART -> Icons.Default.Favorite
                     SubMetricIconType.WEIGHT -> Icons.Default.FitnessCenter
                     SubMetricIconType.TARGET -> Icons.Default.TrackChanges
-                    SubMetricIconType.TREND -> Icons.Default.TrendingUp
+                    SubMetricIconType.TREND -> Icons.AutoMirrored.Filled.TrendingUp
                 }
 
                 Column(

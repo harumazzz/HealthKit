@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="shortcut_water"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_water"
+        android:shortcutShortLabel="@string/shortcut_water_short"
+        android:shortcutLongLabel="@string/shortcut_water_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.haruma.health.kit"
+            android:targetClass="com.haruma.health.kit.MainActivity">
+            <extra
+                android:name="navigate_to"
+                android:value="detail/water" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="shortcut_steps"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_steps"
+        android:shortcutShortLabel="@string/shortcut_steps_short"
+        android:shortcutLongLabel="@string/shortcut_steps_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.haruma.health.kit"
+            android:targetClass="com.haruma.health.kit.MainActivity">
+            <extra
+                android:name="navigate_to"
+                android:value="detail/steps" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="shortcut_weight"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_weight"
+        android:shortcutShortLabel="@string/shortcut_weight_short"
+        android:shortcutLongLabel="@string/shortcut_weight_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.haruma.health.kit"
+            android:targetClass="com.haruma.health.kit.MainActivity">
+            <extra
+                android:name="navigate_to"
+                android:value="detail/weight" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="shortcut_heart_rate"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_heart_rate"
+        android:shortcutShortLabel="@string/shortcut_heart_rate_short"
+        android:shortcutLongLabel="@string/shortcut_heart_rate_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.haruma.health.kit"
+            android:targetClass="com.haruma.health.kit.MainActivity">
+            <extra
+                android:name="navigate_to"
+                android:value="detail/heart_rate" />
+        </intent>
+    </shortcut>
+</shortcuts>

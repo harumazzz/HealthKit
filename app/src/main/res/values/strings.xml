@@ -101,4 +101,13 @@
     <string name="widget_description">Daily health activity summary with progress ring, steps, calories, and time.</string>
     <string name="subtitle_goal_format">Goal: %1$s</string>
     <string name="latest">Latest</string>
+
+    <string name="shortcut_water_short">Log Water</string>
+    <string name="shortcut_water_long">Quick log water intake</string>
+    <string name="shortcut_steps_short">Step Tracker</string>
+    <string name="shortcut_steps_long">View daily step count</string>
+    <string name="shortcut_weight_short">Log Weight</string>
+    <string name="shortcut_weight_long">Record weight entry</string>
+    <string name="shortcut_heart_rate_short">Heart Rate</string>
+    <string name="shortcut_heart_rate_long">Check heart rate metrics</string>
 </resources>
