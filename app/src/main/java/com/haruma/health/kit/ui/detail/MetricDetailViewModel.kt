@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
@@ -151,9 +152,12 @@ class MetricDetailViewModel @Inject constructor(
                 formattedGoalValue = formattedGoalValue
             )
 
+            val weekdayAverages = computeWeekdayAverages(chartBars)
+
             _uiState.update {
                 it.copy(
                     chartBars = chartBars,
+                    weekdayAverages = weekdayAverages,
                     summaryStats = summaryStats,
                     isLoading = false
                 )
@@ -228,5 +232,25 @@ class MetricDetailViewModel @Inject constructor(
             goalValue = goalValue,
             formattedGoalValue = formattedGoalValue
         )
+    }
+
+    private fun computeWeekdayAverages(bars: List<ChartBarData>): List<DayAverage> {
+        val orderedDays = listOf(
+            DayOfWeek.MONDAY,
+            DayOfWeek.TUESDAY,
+            DayOfWeek.WEDNESDAY,
+            DayOfWeek.THURSDAY,
+            DayOfWeek.FRIDAY,
+            DayOfWeek.SATURDAY,
+            DayOfWeek.SUNDAY
+        )
+        return orderedDays.map { dow ->
+            val matchingBars = bars.filter { it.date.dayOfWeek == dow && it.value > 0.0 }
+            val avg = if (matchingBars.isNotEmpty()) matchingBars.sumOf { it.value } / matchingBars.size else 0.0
+            DayAverage(
+                dayLabel = dow.getDisplayName(TextStyle.SHORT, Locale.US),
+                value = avg
+            )
+        }
     }
 }

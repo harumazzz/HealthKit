@@ -22,6 +22,11 @@ data class ChartBarData(
     val isPeak: Boolean = false
 )
 
+data class DayAverage(
+    val dayLabel: String,
+    val value: Double
+)
+
 data class SummaryStatistics(
     val dailyAverage: Double = 0.0,
     val formattedDailyAverage: String = "0",
@@ -39,6 +44,7 @@ data class MetricDetailUiState(
     val timeRange: DetailTimeRange = DetailTimeRange.PAST_7_DAYS,
     val selectedMetric: DetailMetric = DetailMetric.STEPS,
     val chartBars: List<ChartBarData> = emptyList(),
+    val weekdayAverages: List<DayAverage> = emptyList(),
     val selectedBarIndex: Int? = null,
     val summaryStats: SummaryStatistics = SummaryStatistics(),
     val isLoading: Boolean = true,

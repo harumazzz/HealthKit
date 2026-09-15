@@ -1,11 +1,12 @@
 package com.haruma.health.kit.ui.detail
 
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -74,19 +74,9 @@ fun MetricDetailScreen(
         DetailMetric.HEART_RATE -> MetricHeartRate
     }
 
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
-        val contentAlpha by animateFloatAsState(
-            targetValue = if (uiState.isLoading) 0.72f else 1f,
-            animationSpec = tween(durationMillis = 200),
-            label = "detailContentAlpha"
-        )
-
+    Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .graphicsLayer { alpha = contentAlpha },
+            modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -121,30 +111,49 @@ fun MetricDetailScreen(
             }
 
             item {
-                MetricSummaryCards(
-                    stats = uiState.summaryStats,
-                    selectedMetric = uiState.selectedMetric,
-                    accentColor = activeColor
-                )
+                AnimatedContent(
+                    targetState = uiState.summaryStats,
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(220, delayMillis = 90)) togetherWith
+                            fadeOut(animationSpec = tween(180))
+                    },
+                    label = "summaryStatsContent"
+                ) { stats ->
+                    MetricSummaryCards(
+                        stats = stats,
+                        selectedMetric = uiState.selectedMetric,
+                        accentColor = activeColor
+                    )
+                }
             }
 
             item {
-                MetricChartCard(
-                    selectedMetric = uiState.selectedMetric,
-                    chartBars = uiState.chartBars,
-                    selectedBarIndex = uiState.selectedBarIndex,
-                    onBarSelected = viewModel::selectBar,
-                    goalValue = uiState.summaryStats.goalValue,
-                    formattedGoalValue = uiState.summaryStats.formattedGoalValue,
-                    accentColor = activeColor
-                )
+                AnimatedContent(
+                    targetState = Triple(uiState.chartBars, uiState.weekdayAverages, uiState.selectedMetric),
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(260, delayMillis = 60)) togetherWith
+                            fadeOut(animationSpec = tween(180))
+                    },
+                    label = "chartContent"
+                ) { (bars, weekdayAvgs, metric) ->
+                    MetricChartCard(
+                        selectedMetric = metric,
+                        chartBars = bars,
+                        selectedBarIndex = uiState.selectedBarIndex,
+                        onBarSelected = viewModel::selectBar,
+                        goalValue = uiState.summaryStats.goalValue,
+                        formattedGoalValue = uiState.summaryStats.formattedGoalValue,
+                        accentColor = activeColor,
+                        weekdayAverages = weekdayAvgs
+                    )
+                }
             }
         }
 
         AnimatedVisibility(
             visible = uiState.isLoading,
             enter = fadeIn(animationSpec = tween(150)),
-            exit = fadeOut(animationSpec = tween(250)),
+            exit = fadeOut(animationSpec = tween(300)),
             modifier = Modifier.align(Alignment.TopCenter)
         ) {
             LinearProgressIndicator(

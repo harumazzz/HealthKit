@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.haruma.health.kit.R
 import com.haruma.health.kit.ui.detail.ChartBarData
+import com.haruma.health.kit.ui.detail.DayAverage
 import com.haruma.health.kit.ui.detail.DetailMetric
 
 @Composable
@@ -34,6 +36,7 @@ fun MetricChartCard(
     goalValue: Double?,
     formattedGoalValue: String?,
     accentColor: Color,
+    weekdayAverages: List<DayAverage> = emptyList(),
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -90,9 +93,24 @@ fun MetricChartCard(
                 goalValue = goalValue,
                 barColor = accentColor,
                 peakBarColor = MaterialTheme.colorScheme.tertiary,
-                selectedBarColor = accentColor.copy(alpha = 1f),
+                selectedBarColor = accentColor,
                 goalLineColor = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
             )
+
+            if (weekdayAverages.isNotEmpty() && weekdayAverages.any { it.value > 0.0 }) {
+                Spacer(modifier = Modifier.height(20.dp))
+
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                WeekdayBarChart(
+                    dayAverages = weekdayAverages,
+                    accentColor = accentColor
+                )
+            }
         }
     }
 }

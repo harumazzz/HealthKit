@@ -73,12 +73,11 @@ fun MetricSummaryCards(
             )
 
             val goalText = if (stats.formattedGoalValue != null) "${stats.goalMetPercentage}%" else "N/A"
-            val goalSubText = if (stats.formattedGoalValue != null) stringResource(R.string.stat_goal_met) else null
 
             StatItemCard(
                 title = stringResource(R.string.goal_achievement_rate),
                 value = goalText,
-                subtitle = goalSubText,
+                subtitle = null,
                 accentColor = if (stats.goalMetPercentage >= 70) RingSteps else accentColor,
                 modifier = Modifier.weight(1f)
             )

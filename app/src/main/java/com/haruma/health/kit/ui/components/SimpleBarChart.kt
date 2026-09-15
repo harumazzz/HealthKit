@@ -1,25 +1,13 @@
 package com.haruma.health.kit.ui.components
 
-import android.graphics.Paint
-import android.graphics.Rect
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -28,21 +16,31 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.haruma.health.kit.ui.detail.ChartBarData
+import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.ColumnCartesianLayerModel
+import com.patrykandpatrick.vico.compose.cartesian.data.columnSeries
+import com.patrykandpatrick.vico.compose.cartesian.decoration.HorizontalLine
+import com.patrykandpatrick.vico.compose.cartesian.layer.ColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
+import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.Insets
+import com.patrykandpatrick.vico.compose.common.component.LineComponent
+import com.patrykandpatrick.vico.compose.common.component.TextComponent
+import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
+import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
+import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 import java.time.format.DateTimeFormatter
-import kotlin.math.max
 
 @Composable
 fun SimpleBarChart(
@@ -72,43 +70,83 @@ fun SimpleBarChart(
         return
     }
 
-    val animationProgress = remember { Animatable(0f) }
+    val modelProducer = remember { CartesianChartModelProducer() }
+
     LaunchedEffect(bars) {
-        animationProgress.snapTo(0f)
-        animationProgress.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = 650, easing = FastOutSlowInEasing)
-        )
-    }
-
-    val density = LocalDensity.current
-    val gridColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
-    val labelColorArgb = MaterialTheme.colorScheme.onSurfaceVariant.toArgb()
-    val goalTextColorArgb = goalLineColor.toArgb()
-
-    val labelPaint = remember(density, labelColorArgb) {
-        Paint().apply {
-            color = labelColorArgb
-            textSize = with(density) { 10.sp.toPx() }
-            isAntiAlias = true
-            textAlign = Paint.Align.CENTER
-        }
-    }
-
-    val goalPaint = remember(density, goalTextColorArgb) {
-        Paint().apply {
-            color = goalTextColorArgb
-            textSize = with(density) { 9.sp.toPx() }
-            isAntiAlias = true
-            textAlign = Paint.Align.RIGHT
+        modelProducer.runTransaction {
+            columnSeries {
+                series(bars.map { it.value.toFloat() })
+            }
         }
     }
 
     val selectedBar = selectedBarIndex?.let { bars.getOrNull(it) }
 
-    Column(
-        modifier = modifier.fillMaxWidth()
-    ) {
+    val barFill = Fill(barColor.copy(alpha = 0.88f))
+    val peakBarFill = Fill(peakBarColor)
+    val selectedBarFill = Fill(selectedBarColor)
+    val thicknessValue = if (bars.size <= 7) 20.dp else 10.dp
+    val barShape = RoundedCornerShape(40)
+
+    val columnProvider = remember(bars, selectedBarIndex, barFill, peakBarFill, selectedBarFill) {
+        object : ColumnCartesianLayer.ColumnProvider {
+            override fun getColumn(
+                entry: ColumnCartesianLayerModel.Entry,
+                extraStore: ExtraStore,
+            ): LineComponent {
+                val index = entry.x.toInt()
+                val bar = bars.getOrNull(index)
+                val fill = when {
+                    index == selectedBarIndex -> selectedBarFill
+                    bar?.isPeak == true -> peakBarFill
+                    else -> barFill
+                }
+                return LineComponent(
+                    fill = fill,
+                    thickness = thicknessValue,
+                    shape = barShape,
+                )
+            }
+
+            override fun getWidestSeriesColumn(
+                seriesKey: Any,
+                seriesIndex: Int,
+                extraStore: ExtraStore,
+            ): LineComponent = LineComponent(
+                fill = barFill,
+                thickness = thicknessValue,
+                shape = barShape,
+            )
+        }
+    }
+
+    val showLabelInterval = when {
+        bars.size <= 7 -> 1
+        bars.size <= 14 -> 2
+        else -> 5
+    }
+
+    val goalLineDecoration = if (goalValue != null && goalValue > 0.0) {
+        listOf(
+            HorizontalLine(
+                y = { goalValue },
+                line = LineComponent(
+                    fill = Fill(goalLineColor),
+                    thickness = 1.5.dp,
+                ),
+                labelComponent = TextComponent(
+                    textStyle = TextStyle(
+                        color = goalLineColor,
+                        fontSize = 9.sp,
+                    ),
+                    padding = Insets(horizontal = 4.dp, vertical = 2.dp),
+                ),
+                label = { "Goal" },
+            )
+        )
+    } else emptyList()
+
+    Column(modifier = modifier.fillMaxWidth()) {
         if (selectedBar != null) {
             Surface(
                 modifier = Modifier
@@ -143,138 +181,47 @@ fun SimpleBarChart(
                         text = selectedBar.formattedValue,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = selectedBarColor
                     )
                 }
             }
         }
 
-        Box(
+        val outlineColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+        val labelStyle = TextStyle(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 10.sp,
+        )
+
+        CartesianChartHost(
+            chart = rememberCartesianChart(
+                rememberColumnCartesianLayer(columnProvider = columnProvider),
+                bottomAxis = HorizontalAxis.rememberBottom(
+                    valueFormatter = { _, value, _ ->
+                        val index = value.toInt()
+                        if (index in bars.indices && bars[index].label.isNotBlank()) {
+                            bars[index].label
+                        } else {
+                            (index + 1).toString()
+                        }
+                    },
+                    itemPlacer = remember(showLabelInterval) {
+                        HorizontalAxis.ItemPlacer.aligned(spacing = { showLabelInterval })
+                    },
+                    line = rememberLineComponent(fill = Fill(outlineColor)),
+                    tick = rememberLineComponent(fill = Fill.Transparent),
+                    guideline = rememberLineComponent(fill = Fill.Transparent),
+                    label = rememberTextComponent(style = labelStyle),
+                ),
+                decorations = goalLineDecoration,
+                getXStep = { 1.0 },
+            ),
+            modelProducer = modelProducer,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(240.dp)
-        ) {
-            Canvas(
-                modifier = Modifier
-                    .matchParentSize()
-                    .pointerInput(bars) {
-                        detectTapGestures { offset ->
-                            val slotWidth = size.width / bars.size
-                            val touchedIndex = (offset.x / slotWidth).toInt().coerceIn(0, bars.lastIndex)
-                            if (touchedIndex == selectedBarIndex) {
-                                onBarSelected(null)
-                            } else {
-                                onBarSelected(touchedIndex)
-                            }
-                        }
-                    }
-                    .pointerInput(bars) {
-                        detectHorizontalDragGestures { change, _ ->
-                            val slotWidth = size.width / bars.size
-                            val touchedIndex = (change.position.x / slotWidth).toInt().coerceIn(0, bars.lastIndex)
-                            onBarSelected(touchedIndex)
-                        }
-                    }
-            ) {
-                val horizontalPadding = 8.dp.toPx()
-                val bottomLabelHeight = 24.dp.toPx()
-                val topPadding = 16.dp.toPx()
-                val chartHeight = size.height - bottomLabelHeight - topPadding
-                val chartBottom = size.height - bottomLabelHeight
-
-                val maxBarValue = bars.maxOfOrNull { it.value } ?: 0.0
-                val maxValue = max(maxOf(maxBarValue, goalValue ?: 0.0) * 1.15, 1.0)
-
-                val dashedEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
-
-                drawLine(
-                    color = gridColor,
-                    start = Offset(0f, chartBottom),
-                    end = Offset(size.width, chartBottom),
-                    strokeWidth = 1.dp.toPx()
-                )
-
-                drawLine(
-                    color = gridColor.copy(alpha = 0.25f),
-                    start = Offset(0f, chartBottom - (chartHeight * 0.5f)),
-                    end = Offset(size.width, chartBottom - (chartHeight * 0.5f)),
-                    strokeWidth = 1.dp.toPx(),
-                    pathEffect = dashedEffect
-                )
-
-                if (goalValue != null && goalValue > 0.0) {
-                    val goalRatio = (goalValue / maxValue).toFloat().coerceIn(0f, 1f)
-                    val goalY = chartBottom - (chartHeight * goalRatio)
-
-                    drawLine(
-                        color = goalLineColor,
-                        start = Offset(0f, goalY),
-                        end = Offset(size.width, goalY),
-                        strokeWidth = 1.5.dp.toPx(),
-                        pathEffect = dashedEffect
-                    )
-
-                    drawContext.canvas.nativeCanvas.drawText(
-                        "Goal",
-                        size.width - 6.dp.toPx(),
-                        goalY - 4.dp.toPx(),
-                        goalPaint
-                    )
-                }
-
-                val slotWidth = size.width / bars.size
-                val barWidth = when {
-                    bars.size <= 7 -> (slotWidth * 0.55f).coerceAtMost(32.dp.toPx())
-                    else -> (slotWidth * 0.70f).coerceAtLeast(3.dp.toPx())
-                }
-
-                val showLabelInterval = when {
-                    bars.size <= 7 -> 1
-                    bars.size <= 14 -> 2
-                    else -> 5
-                }
-
-                bars.forEachIndexed { index, bar ->
-                    val centerX = (index * slotWidth) + (slotWidth / 2f)
-                    val isSelected = index == selectedBarIndex
-                    val animatedRatio = (bar.value / maxValue).toFloat().coerceIn(0f, 1f) * animationProgress.value
-
-                    val barHeight = max(chartHeight * animatedRatio, if (bar.value > 0.0) 4.dp.toPx() else 2.dp.toPx())
-                    val barTop = chartBottom - barHeight
-                    val barLeft = centerX - (barWidth / 2f)
-
-                    val color = when {
-                        isSelected -> selectedBarColor
-                        bar.isPeak -> peakBarColor
-                        else -> barColor.copy(alpha = 0.88f)
-                    }
-
-                    if (isSelected) {
-                        drawRoundRect(
-                            color = selectedBarColor.copy(alpha = 0.18f),
-                            topLeft = Offset(index * slotWidth, topPadding),
-                            size = Size(slotWidth, chartHeight),
-                            cornerRadius = CornerRadius(6.dp.toPx(), 6.dp.toPx())
-                        )
-                    }
-
-                    drawRoundRect(
-                        color = color,
-                        topLeft = Offset(barLeft, barTop),
-                        size = Size(barWidth, barHeight),
-                        cornerRadius = CornerRadius(barWidth / 2f, barWidth / 2f)
-                    )
-
-                    if (index % showLabelInterval == 0 || index == bars.lastIndex) {
-                        drawContext.canvas.nativeCanvas.drawText(
-                            bar.label,
-                            centerX,
-                            size.height - 4.dp.toPx(),
-                            labelPaint
-                        )
-                    }
-                }
-            }
-        }
+                .height(240.dp),
+            scrollState = rememberVicoScrollState(scrollEnabled = false),
+            zoomState = rememberVicoZoomState(zoomEnabled = false),
+        )
     }
 }
