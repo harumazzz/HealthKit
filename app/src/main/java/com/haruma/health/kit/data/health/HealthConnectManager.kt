@@ -135,7 +135,7 @@ class HealthConnectManager @Inject constructor(
                 waterMilliliters = water,
                 weightKg = latestWeight
             )
-        } catch (_: Exception) {
+        } catch (_: Throwable) {
             DailyHealthSummary(date = date)
         }
     }
@@ -210,7 +210,7 @@ class HealthConnectManager @Inject constructor(
                     waterMilliliters = water
                 )
             }
-        } catch (_: Exception) {
+        } catch (_: Throwable) {
             var fallbackDate = startDate
             while (!fallbackDate.isAfter(endDate)) {
                 val daily = getDailyHealthSummary(fallbackDate)
@@ -236,7 +236,7 @@ class HealthConnectManager @Inject constructor(
             )
             client.insertRecords(listOf(record))
             true
-        } catch (_: Exception) {
+        } catch (_: Throwable) {
             false
         }
     }
@@ -253,7 +253,7 @@ class HealthConnectManager @Inject constructor(
             )
             client.insertRecords(listOf(record))
             true
-        } catch (_: Exception) {
+        } catch (_: Throwable) {
             false
         }
     }

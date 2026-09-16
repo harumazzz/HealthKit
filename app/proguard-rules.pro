@@ -18,6 +18,11 @@
     volatile <fields>;
 }
 
+-keep class androidx.work.** { *; }
+-keep class androidx.startup.** { *; }
+-keep class * extends androidx.work.Worker { *; }
+-keep class * extends androidx.work.ListenableWorker { *; }
+
 -keep class com.haruma.health.kit.data.model.** { *; }
 -keep class com.haruma.health.kit.di.** { *; }
 -keep class * extends dagger.hilt.android.HiltAndroidApp

@@ -56,6 +56,7 @@ class HealthKitWidgetProvider : AppWidgetProvider() {
                     calories = summary.caloriesBurned,
                     sleepMinutes = summary.sleepDurationMinutes
                 )
+            } catch (_: Throwable) {
             } finally {
                 pendingResult.finish()
             }

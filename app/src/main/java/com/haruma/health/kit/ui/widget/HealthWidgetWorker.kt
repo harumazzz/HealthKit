@@ -45,7 +45,9 @@ class HealthWidgetWorker(
             )
 
             Result.success()
-        } catch (_: Exception) {
+        } catch (_: SecurityException) {
+            Result.success()
+        } catch (_: Throwable) {
             Result.retry()
         }
     }
