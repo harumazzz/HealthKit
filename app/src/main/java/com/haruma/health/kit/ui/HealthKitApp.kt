@@ -79,6 +79,18 @@ fun HealthKitApp(
         LocalizedContextWrapper(context, configContext)
     }
 
+    DisposableEffect(appLanguage, context) {
+        Locale.setDefault(locale)
+        val activity = context.findActivity()
+        if (activity != null) {
+            val config = activity.resources.configuration
+            config.setLocale(locale)
+            @Suppress("DEPRECATION")
+            activity.resources.updateConfiguration(config, activity.resources.displayMetrics)
+        }
+        onDispose {}
+    }
+
     CompositionLocalProvider(
         LocalConfiguration provides updatedConfig,
         LocalContext provides localizedContext

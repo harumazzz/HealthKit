@@ -70,11 +70,15 @@ fun DashboardScreen(
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 viewModel.checkPermissionsAndLoadData()
+                viewModel.startPeriodicRefresh()
+            } else if (event == Lifecycle.Event.ON_PAUSE) {
+                viewModel.stopPeriodicRefresh()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
+            viewModel.stopPeriodicRefresh()
         }
     }
 

@@ -55,11 +55,15 @@ fun MetricDetailScreen(
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 viewModel.checkPermissionsAndLoad()
+                viewModel.startPeriodicRefresh()
+            } else if (event == Lifecycle.Event.ON_PAUSE) {
+                viewModel.stopPeriodicRefresh()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
+            viewModel.stopPeriodicRefresh()
         }
     }
 

@@ -26,6 +26,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -48,6 +49,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.haruma.health.kit.R
@@ -233,12 +235,31 @@ fun QuickLogSheet(
                         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
                     ) {
                         listOf(250L, 500L, 750L).forEach { preset ->
+                            val isSelected = uiState.waterAmountMl.toLong() == preset
                             FilterChip(
-                                selected = uiState.waterAmountMl.toLong() == preset,
+                                selected = isSelected,
                                 onClick = {
                                     viewModel.setWaterAmount(preset.toDouble())
                                 },
-                                label = { Text(stringResource(R.string.quick_add_water, preset)) }
+                                label = {
+                                    Text(
+                                        text = stringResource(R.string.quick_add_water, preset),
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                                    )
+                                },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                    labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    selectedContainerColor = RingWater,
+                                    selectedLabelColor = Color.White
+                                ),
+                                border = FilterChipDefaults.filterChipBorder(
+                                    enabled = true,
+                                    selected = isSelected,
+                                    borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
+                                    selectedBorderColor = RingWater
+                                ),
+                                shape = RoundedCornerShape(12.dp)
                             )
                         }
                     }

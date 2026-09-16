@@ -5,10 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.haruma.health.kit.data.health.HealthConnectManager
 import com.haruma.health.kit.data.preferences.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -22,6 +25,8 @@ class StepDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(StepDetailUiState())
     val uiState: StateFlow<StepDetailUiState> = _uiState.asStateFlow()
 
+    private var periodicRefreshJob: Job? = null
+
     init {
         viewModelScope.launch {
             preferencesRepository.userGoalsFlow.collect { goals ->
@@ -29,6 +34,23 @@ class StepDetailViewModel @Inject constructor(
             }
         }
         checkPermissionsAndLoad()
+    }
+
+    fun startPeriodicRefresh() {
+        periodicRefreshJob?.cancel()
+        periodicRefreshJob = viewModelScope.launch {
+            while (isActive) {
+                delay(10_000)
+                if (_uiState.value.hasPermissions && _uiState.value.selectedDate == LocalDate.now()) {
+                    loadDataForDate(_uiState.value.selectedDate, isSilentRefresh = true)
+                }
+            }
+        }
+    }
+
+    fun stopPeriodicRefresh() {
+        periodicRefreshJob?.cancel()
+        periodicRefreshJob = null
     }
 
     fun checkPermissionsAndLoad() {
@@ -66,9 +88,11 @@ class StepDetailViewModel @Inject constructor(
         loadDataForDate(date)
     }
 
-    fun loadDataForDate(date: LocalDate) {
+    fun loadDataForDate(date: LocalDate, isSilentRefresh: Boolean = false) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            if (!isSilentRefresh) {
+                _uiState.update { it.copy(isLoading = true) }
+            }
             val hourlyData = healthConnectManager.getHourlyStepData(date)
             _uiState.update {
                 it.copy(
@@ -88,5 +112,10 @@ class StepDetailViewModel @Inject constructor(
 
     fun setGoalSheetVisible(visible: Boolean) {
         _uiState.update { it.copy(showGoalSheet = visible) }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopPeriodicRefresh()
     }
 }

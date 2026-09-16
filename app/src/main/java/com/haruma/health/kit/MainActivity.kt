@@ -11,6 +11,7 @@ import com.haruma.health.kit.ui.HealthKitApp
 import com.haruma.health.kit.ui.widget.HealthKitWidgetProvider
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import com.haruma.health.kit.ui.widget.HealthWidgetManager
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -24,6 +25,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         extractInitialRoute(intent)
+
+        HealthWidgetManager.schedulePeriodicWidgetUpdate(this)
 
         setContent {
             HealthKitApp(

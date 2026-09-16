@@ -9,10 +9,13 @@ import com.haruma.health.kit.data.preferences.UserPreferencesRepository
 import com.haruma.health.kit.ui.widget.HealthKitWidgetProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -29,6 +32,8 @@ class DashboardViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
 
+    private var periodicRefreshJob: Job? = null
+
     init {
         viewModelScope.launch {
             preferencesRepository.userGoalsFlow.collect { goals ->
@@ -37,6 +42,23 @@ class DashboardViewModel @Inject constructor(
             }
         }
         checkPermissionsAndLoadData()
+    }
+
+    fun startPeriodicRefresh() {
+        periodicRefreshJob?.cancel()
+        periodicRefreshJob = viewModelScope.launch {
+            while (isActive) {
+                delay(10_000)
+                if (_uiState.value.hasPermissions && _uiState.value.selectedDate == LocalDate.now()) {
+                    loadDailyData(_uiState.value.selectedDate, isSilentRefresh = true)
+                }
+            }
+        }
+    }
+
+    fun stopPeriodicRefresh() {
+        periodicRefreshJob?.cancel()
+        periodicRefreshJob = null
     }
 
     fun checkPermissionsAndLoadData() {
@@ -92,9 +114,11 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    fun loadDailyData(date: LocalDate = _uiState.value.selectedDate) {
+    fun loadDailyData(date: LocalDate = _uiState.value.selectedDate, isSilentRefresh: Boolean = false) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            if (!isSilentRefresh) {
+                _uiState.update { it.copy(isLoading = true) }
+            }
             val summary = healthConnectManager.getDailyHealthSummary(date)
             _uiState.update {
                 it.copy(
@@ -134,5 +158,10 @@ class DashboardViewModel @Inject constructor(
 
     fun openInstall(context: Context) {
         healthConnectManager.openInstallHealthConnect(context)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopPeriodicRefresh()
     }
 }

@@ -8,10 +8,13 @@ import com.haruma.health.kit.data.model.MetricType
 import com.haruma.health.kit.data.model.UserGoals
 import com.haruma.health.kit.data.preferences.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -27,6 +30,7 @@ class MetricDetailViewModel @Inject constructor(
     val uiState: StateFlow<MetricDetailUiState> = _uiState.asStateFlow()
 
     private var currentUserGoals: UserGoals = UserGoals()
+    private var periodicRefreshJob: Job? = null
 
     init {
         val typeArg = savedStateHandle.get<String>("metricType")
@@ -43,6 +47,23 @@ class MetricDetailViewModel @Inject constructor(
             }
         }
         checkPermissionsAndLoad()
+    }
+
+    fun startPeriodicRefresh() {
+        periodicRefreshJob?.cancel()
+        periodicRefreshJob = viewModelScope.launch {
+            while (isActive) {
+                delay(10_000)
+                if (_uiState.value.hasPermissions && _uiState.value.selectedDate == LocalDate.now()) {
+                    loadDataForDate(_uiState.value.selectedDate, isSilentRefresh = true)
+                }
+            }
+        }
+    }
+
+    fun stopPeriodicRefresh() {
+        periodicRefreshJob?.cancel()
+        periodicRefreshJob = null
     }
 
     fun setMetricType(metricType: MetricType) {
@@ -86,9 +107,11 @@ class MetricDetailViewModel @Inject constructor(
         loadDataForDate(date)
     }
 
-    fun loadDataForDate(date: LocalDate) {
+    fun loadDataForDate(date: LocalDate, isSilentRefresh: Boolean = false) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            if (!isSilentRefresh) {
+                _uiState.update { it.copy(isLoading = true) }
+            }
             val metricData = healthConnectManager.getHourlyMetricData(
                 date = date,
                 metricType = _uiState.value.metricType,
@@ -118,5 +141,10 @@ class MetricDetailViewModel @Inject constructor(
 
     fun setGoalSheetVisible(visible: Boolean) {
         _uiState.update { it.copy(showGoalSheet = visible) }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopPeriodicRefresh()
     }
 }

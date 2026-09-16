@@ -50,7 +50,7 @@ fun MetricSummaryCards(
             StatItemCard(
                 title = stringResource(R.string.stat_peak_day),
                 value = stats.formattedPeakValue,
-                subtitle = stats.peakDate?.format(DateTimeFormatter.ofPattern("MMM d")),
+                subtitle = null,
                 accentColor = MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier.weight(1f)
             )

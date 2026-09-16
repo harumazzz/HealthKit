@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">Health Kit</string>
     <string name="nav_dashboard">Dashboard</string>
     <string name="nav_detail">Trends</string>
     <string name="nav_trends">Trends</string>
