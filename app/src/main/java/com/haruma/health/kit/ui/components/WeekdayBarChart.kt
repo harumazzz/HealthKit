@@ -134,7 +134,7 @@ fun WeekdayBarChart(
                     guideline = rememberLineComponent(fill = Fill.Transparent),
                     label = rememberTextComponent(style = labelStyle),
                 ),
-                getXStep = { 1.0 },
+                getXStep = { _, _, _ -> 1.0 },
             ),
             modelProducer = modelProducer,
             modifier = Modifier

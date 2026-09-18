@@ -211,7 +211,7 @@ fun SimpleBarChart(
                     label = rememberTextComponent(style = labelStyle),
                 ),
                 decorations = goalLineDecoration,
-                getXStep = { 1.0 },
+                getXStep = { _, _, _ -> 1.0 },
             ),
             modelProducer = modelProducer,
             modifier = Modifier
