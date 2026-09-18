@@ -46,9 +46,11 @@ class HealthWidgetWorker(
 
             Result.success()
         } catch (_: SecurityException) {
+            HealthWidgetManager.updateWidgetWithCachedData(appContext)
             Result.success()
         } catch (_: Throwable) {
-            Result.retry()
+            HealthWidgetManager.updateWidgetWithCachedData(appContext)
+            Result.success()
         }
     }
 }

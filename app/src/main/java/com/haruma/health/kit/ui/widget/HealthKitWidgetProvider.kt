@@ -36,6 +36,8 @@ class HealthKitWidgetProvider : AppWidgetProvider() {
     ) {
         HealthWidgetManager.schedulePeriodicWidgetUpdate(context)
 
+        HealthWidgetManager.updateWidgetWithCachedData(context)
+
         val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {

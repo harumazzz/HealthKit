@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "960100284137",
+    "project_id": "health-kit-android-d06a6",
+    "storage_bucket": "health-kit-android-d06a6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960100284137:android:a0735526f630eb8379a278",
+        "android_client_info": {
+          "package_name": "com.haruma.health.kit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTbqyr_f56n7HUNBGOOj-F6IPVEb-4_hc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960100284137:android:3f9c8a0f51371de979a278",
+        "android_client_info": {
+          "package_name": "com.haruma.health.kit.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTbqyr_f56n7HUNBGOOj-F6IPVEb-4_hc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

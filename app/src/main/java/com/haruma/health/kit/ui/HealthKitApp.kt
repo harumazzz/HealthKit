@@ -74,9 +74,10 @@ fun HealthKitApp(
             setLocale(locale)
         }
     }
-    val localizedContext = remember(appLanguage, context) {
-        val configContext = context.createConfigurationContext(updatedConfig)
-        LocalizedContextWrapper(context, configContext)
+    val activityContext = remember(context) { context.findActivity() ?: context }
+    val localizedContext = remember(appLanguage, activityContext) {
+        val configContext = activityContext.createConfigurationContext(updatedConfig)
+        LocalizedContextWrapper(activityContext, configContext)
     }
 
     DisposableEffect(appLanguage, context) {

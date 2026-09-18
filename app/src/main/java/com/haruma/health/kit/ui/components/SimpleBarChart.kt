@@ -26,6 +26,7 @@ import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.ColumnCartesianLayerModel
+import com.patrykandpatrick.vico.compose.cartesian.data.columnModel
 import com.patrykandpatrick.vico.compose.cartesian.data.columnSeries
 import com.patrykandpatrick.vico.compose.cartesian.decoration.HorizontalLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.ColumnCartesianLayer
@@ -74,9 +75,7 @@ fun SimpleBarChart(
 
     LaunchedEffect(bars) {
         modelProducer.runTransaction {
-            columnSeries {
-                series(bars.map { it.value.toFloat() })
-            }
+            columnModel { series(bars.map { it.value.toFloat() }) }
         }
     }
 
@@ -199,11 +198,9 @@ fun SimpleBarChart(
                 bottomAxis = HorizontalAxis.rememberBottom(
                     valueFormatter = { _, value, _ ->
                         val index = value.toInt()
-                        if (index in bars.indices && bars[index].label.isNotBlank()) {
-                            bars[index].label
-                        } else {
-                            (index + 1).toString()
-                        }
+                        val rawLabel = if (index in bars.indices) bars[index].label else null
+                        val result = if (!rawLabel.isNullOrBlank()) rawLabel else (index + 1).toString()
+                        result.ifBlank { (index + 1).toString() }
                     },
                     itemPlacer = remember(showLabelInterval) {
                         HorizontalAxis.ItemPlacer.aligned(spacing = { showLabelInterval })

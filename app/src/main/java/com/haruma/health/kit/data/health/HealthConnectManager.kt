@@ -210,6 +210,8 @@ class HealthConnectManager @Inject constructor(
                     waterMilliliters = water
                 )
             }
+        } catch (_: SecurityException) {
+            return resultMap.values.sortedBy { it.date }
         } catch (_: Throwable) {
             var fallbackDate = startDate
             while (!fallbackDate.isAfter(endDate)) {

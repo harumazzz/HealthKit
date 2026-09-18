@@ -24,6 +24,7 @@ import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.ColumnCartesianLayerModel
+import com.patrykandpatrick.vico.compose.cartesian.data.columnModel
 import com.patrykandpatrick.vico.compose.cartesian.data.columnSeries
 import com.patrykandpatrick.vico.compose.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
@@ -63,9 +64,7 @@ fun WeekdayBarChart(
 
     LaunchedEffect(dayAverages) {
         modelProducer.runTransaction {
-            columnSeries {
-                series(dayAverages.map { it.value.toFloat() })
-            }
+            columnModel { series(dayAverages.map { it.value.toFloat() }) }
         }
     }
 
@@ -123,12 +122,9 @@ fun WeekdayBarChart(
                 bottomAxis = HorizontalAxis.rememberBottom(
                     valueFormatter = { _, value, _ ->
                         val index = value.toInt()
-                        val label = dayAverages.getOrNull(index)?.dayLabel
-                        if (label != null && label.isNotBlank()) {
-                            label
-                        } else {
-                            (index + 1).toString()
-                        }
+                        val rawLabel = dayAverages.getOrNull(index)?.dayLabel
+                        val result = if (!rawLabel.isNullOrBlank()) rawLabel else (index + 1).toString()
+                        result.ifBlank { (index + 1).toString() }
                     },
                     itemPlacer = remember {
                         HorizontalAxis.ItemPlacer.aligned(spacing = { 1 })

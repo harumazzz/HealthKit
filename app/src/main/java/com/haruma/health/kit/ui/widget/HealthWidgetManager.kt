@@ -13,6 +13,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.haruma.health.kit.MainActivity
 import com.haruma.health.kit.R
+import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
 object HealthWidgetManager {
@@ -24,6 +25,13 @@ object HealthWidgetManager {
     const val EXTRA_NAVIGATE_TO = "navigate_to"
     const val ROUTE_STEP_DETAIL = "detail/steps"
 
+    private const val PREFS_NAME = "health_widget_cache"
+    private const val KEY_STEPS = "cached_steps"
+    private const val KEY_STEPS_GOAL = "cached_steps_goal"
+    private const val KEY_CALORIES = "cached_calories"
+    private const val KEY_SLEEP_MINUTES = "cached_sleep_minutes"
+    private const val KEY_CACHED_DATE = "cached_date"
+
     fun schedulePeriodicWidgetUpdate(context: Context) {
         val periodicRequest = PeriodicWorkRequestBuilder<HealthWidgetWorker>(
             15, TimeUnit.MINUTES
@@ -31,7 +39,7 @@ object HealthWidgetManager {
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             WORK_NAME_PERIODIC_WIDGET_UPDATE,
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.UPDATE,
             periodicRequest
         )
     }
@@ -43,6 +51,49 @@ object HealthWidgetManager {
             WORK_NAME_ONETIME_WIDGET_UPDATE,
             ExistingWorkPolicy.REPLACE,
             oneTimeRequest
+        )
+    }
+
+    fun saveCachedWidgetData(
+        context: Context,
+        steps: Long,
+        stepsGoal: Long,
+        calories: Double,
+        sleepMinutes: Long
+    ) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit()
+            .putLong(KEY_STEPS, steps)
+            .putLong(KEY_STEPS_GOAL, stepsGoal)
+            .putString(KEY_CALORIES, calories.toString())
+            .putLong(KEY_SLEEP_MINUTES, sleepMinutes)
+            .putString(KEY_CACHED_DATE, LocalDate.now().toString())
+            .apply()
+    }
+
+    data class CachedWidgetData(
+        val steps: Long,
+        val stepsGoal: Long,
+        val calories: Double,
+        val sleepMinutes: Long,
+        val isFromToday: Boolean
+    )
+
+    fun loadCachedWidgetData(context: Context): CachedWidgetData? {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        if (!prefs.contains(KEY_STEPS)) return null
+
+        val cachedDate = prefs.getString(KEY_CACHED_DATE, null)
+        val isFromToday = cachedDate == LocalDate.now().toString()
+
+        return CachedWidgetData(
+            steps = if (isFromToday) prefs.getLong(KEY_STEPS, 0L) else 0L,
+            stepsGoal = prefs.getLong(KEY_STEPS_GOAL, 6000L),
+            calories = if (isFromToday) {
+                prefs.getString(KEY_CALORIES, "0.0")?.toDoubleOrNull() ?: 0.0
+            } else 0.0,
+            sleepMinutes = if (isFromToday) prefs.getLong(KEY_SLEEP_MINUTES, 0L) else 0L,
+            isFromToday = isFromToday
         )
     }
 
@@ -58,6 +109,8 @@ object HealthWidgetManager {
         val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
 
         if (appWidgetIds.isEmpty()) return
+
+        saveCachedWidgetData(context, steps, stepsGoal, calories, sleepMinutes)
 
         val bitmap = HealthWidgetBitmapFactory.renderWidgetBitmap(
             context = context,
@@ -86,5 +139,16 @@ object HealthWidgetManager {
             views.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
+    }
+
+    fun updateWidgetWithCachedData(context: Context) {
+        val cached = loadCachedWidgetData(context) ?: return
+        updateWidgetViews(
+            context = context,
+            steps = cached.steps,
+            stepsGoal = cached.stepsGoal,
+            calories = cached.calories,
+            sleepMinutes = cached.sleepMinutes
+        )
     }
 }
